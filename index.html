@@ -1,0 +1,344 @@
+<!doctype HTML>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>详情页</title>
+<style>
+
+body {
+font-family: Tahoma;
+font-size: 10pt;
+/*line-height: 170%;*/
+padding-top: 10px;
+margin:0px;
+}
+/*------------------------------------------------------------侧边导航*/
+nav {
+background: gray;
+color: white;
+text-decoration: none;
+overflow-x: hidden;
+overflow-y: auto;
+position: fixed;
+top: 0;
+left: 0;
+bottom: 0;
+width: 200px;
+}
+nav a {
+	text-decoration: none;
+	color: white;
+}
+/*-------------------------------------------------------------标头*/
+@keyframes move {
+	0% {
+		text-shadow: 5px 0px 3px rgba(0,0,0,0.5);
+		transform: perspective(2000px) rotateY(0deg);
+	}
+	25% {
+		text-shadow: 20px 0px 5px rgba(0,0,0,.3);
+		transform: perspective(2000px) rotateY(40deg);
+	}
+	50% {
+		text-shadow: 5px 0px 5px rgba(0,0,0,.5);
+		transform: perspective(2000px) rotateY(0deg);
+	}
+	75% {
+		text-shadow: -20px 0px 5px rgba(0,0,0,.3);
+		transform: perspective(2000px) rotateY(-40deg);
+	}
+	100% {
+		text-shadow: 5px 0px 3px rgba(0,0,0,0.5);
+		transform: perspective(2000px) rotateY(0deg);
+	}
+}
+
+@keyframes moveX {
+	0% {
+		text-shadow: 0px 0px 3px rgba(0,0,0,0.5);
+		transform: perspective(2000px) rotateX(0deg);
+	}
+	25% {
+		text-shadow: 0px 10px 5px rgba(0,0,0,.3);
+		transform: perspective(2000px) rotateX(30deg);
+	}
+	50% {
+		text-shadow: 0px 0px 5px rgba(0,0,0,.5);
+		transform: perspective(2000px) rotateX(0deg);
+	}
+	75% {
+		text-shadow: 0px 10px 5px rgba(0,0,0,.3);
+		transform: perspective(2000px) rotateX(-30deg);
+	}
+	100% {
+		text-shadow: 0px 0px 3px rgba(0,0,0,0.5);
+		transform: perspective(2000px) rotateX(0deg);
+	}
+}
+
+
+header {
+padding-top: 10px;
+padding-left: 220px;
+font-size: 18px;
+position: absolute;
+/*margin-bottom:30px;*/
+text-shadow: 5px 0px 3px rgba(0,0,0,.3);
+color: black;
+}
+
+header h1 {
+	
+	margin:0px;
+	padding: 0px;
+	animation: move 6s forwards infinite;
+}
+/*----------------------------------------------------------主题*/
+article {
+margin-top: 80px;
+padding-left: 220px;
+}
+
+@keyframes imgMoveOver {
+	0% {
+		/*text-shadow: 5px 5px 3px rgba(0,0,0,0.5);*/
+		transform: scale(1) ;
+	}
+	100% {
+		/*text-shadow: 5px 5px 3px rgba(0,0,0,0.5);*/
+		/*transform: perspective(2000px) rotateY(30deg);*/
+		transform: scale(1.01) translateY(-2%);
+	}
+}
+
+@keyframes imgMoveOut {
+	0% {
+		/*text-shadow: 5px 5px 3px rgba(0,0,0,0.5);*/
+		
+		transform: scale(1.1) translateY(-5%);
+	}
+	100% {
+		/*text-shadow: 5px 5px 3px rgba(0,0,0,0.5);*/
+		/*transform: perspective(2000px) rotateY(30deg);*/
+		transform: scale(1) ;
+	}
+}
+
+img {
+	/*position: relative;*/
+	width: 900px;
+	border-width: 5px;
+	border-style: solid;
+	border-color: Orange;
+	transform-origin:left top;
+}
+img:hover {
+	animation: imgMoveOver 0.5s forwards;
+}
+/*段落*/
+h3,h4{
+	/*background-color: rgba(0,0,0,.3);*/
+	background-image: linear-gradient(to right, rgba(0,0,0,1) 30%, rgba(0,0,0,0.5) 50%, rgba(0,0,0,0.3) 65%, rgba(0,0,0,0.2) 75%, white 100%);
+/*	width: 500px;*/
+	color: white;
+	font-size: 22px;
+	padding-left: 10px;
+}
+h4{
+	width: 50%;
+	font-size: 18px;
+	margin-left: 5px;
+}
+pre {
+	background-color: black;
+}
+pre code {
+	color: yellow;
+	font-size: 16px;
+	font-weight: 500;
+}
+/*---------------------------------------------------------底部*/
+footer {
+padding-top: 10px;
+padding-left: 220px;
+padding-bottom: 10px;
+background-color: black;
+color: white;
+}
+footer h3 {
+	color: white;
+	background-color:transparent;
+	background-image: linear-gradient(to right, black 0%,  black 100%);
+}
+</style>
+</head>
+<body>
+
+<nav>
+<ul>
+<li class="level3"><a href="#0.1">模拟实现：</a></li><li class="level3"><a href="#0.2">实现原理：</a></li><li class="level3"><a href="#0.3">Node.js上需要写一些程序，来处理TCP请求。</a></li><li class="level3"><a href="#0.4">建立：</a></li><li class="level3"><a href="#0.5">基本传输数据：</a></li><li class="level3"><a href="#0.6">广播数据：</a></li><li class="level3"><a href="#0.7">聊天室：</a></li><li class="level3"><a href="#0.8">开源协议</a></li></ul>
+
+</nav>
+
+<header>
+<h1 id="web-socket-socket-io">web Socket Socket.IO</h1>
+
+</header>
+
+<article>
+<h3 id="0.1">模拟实现：</h3>
+<ul>
+<li><p>长轮询：客户端每隔很短的时间，都会对服务器发出请求，查看是否有新的消息，只要轮询速度足够快，例如1秒，就能给人造成交互是实时进行的印象。这种做法是无奈之举，实际上对服务器、客户端双方都造成了大量的性能浪费。</p>
+</li>
+<li><p>长连接：客户端只请求一次，但是服务器会将连接保持，不会返回结果（想象一下我们没有写res.end()时，浏览器一直转小菊花）。服务器有了新数据，就将数据发回来，又有了新数据，就将数据发回来，而一直保持挂起状态。这种做法的也造成了大量的性能浪费。</p>
+</li>
+</ul>
+<h3 id="0.2">实现原理：</h3>
+<ul>
+<li>WebSocket的原理非常的简单：利用HTTP请求产生握手，HTTP头部中含有WebSocket协议的请求，所以握手之后，二者转用TCP协议进行交流（QQ的协议）。现在的浏览器和服务器之间，就是QQ和QQ服务器的关系了。所以WebSocket协议，需要浏览器支持，更需要服务器支持。</li>
+<li>支持WebSocket协议的浏览器有：Chrome 4、火狐4、IE10、Safari5</li>
+<li>支持WebSocket协议的服务器有：<em>Node 0</em>、Apach7.0.2、Nginx1.3</li>
+</ul>
+<h3 id="0.3">Node.js上需要写一些程序，来处理TCP请求。</h3>
+<ul>
+<li>Node.js从诞生之日起，就支持WebSocket协议。不过，从底层一步一步搭建一个Socket服务器很费劲（想象一下Node写一个静态文件服务都那么费劲）。所以，有大神帮我们写了一个库Socket.IO。</li>
+<li>Socket.IO是业界良心，新手福音。它屏蔽了所有底层细节，让顶层调用非常简单。并且还为不支持WebSocket协议的浏览器，提供了长轮询的透明模拟机制。</li>
+<li>Node的单线程、非阻塞I/O、事件驱动机制，使它非常适合Socket服务器。</li>
+</ul>
+<h3 id="0.4">建立：</h3>
+<ul>
+<li>npm install socket.io</li>
+<li>写原生的JS，搭建一个服务器，server创建好之后，创建一个io对象</li>
+</ul>
+<pre><code class="lang-js">   var http = require(&quot;http&quot;);
+
+   var server = http.createServer(function(req,res){
+       if(req.url == &quot;/&quot;){
+     //显示首页
+       fs.readFile(&quot;./index.html&quot;,function(err,data){
+         res.end(data);
+       });
+      }
+
+       res.end(&quot;你好&quot;);
+   });
+
+   var io = require(&#39;socket.io&#39;)(server);
+    //监听连接事件
+    //io对象连接时得到一个SOCket对象
+    io.on(&quot;connection&quot;,function(socket){
+        console.log(&quot;1个客户端连接了&quot;);
+    })
+
+   server.listen(3000,&quot;127.0.0.1&quot;);
+</code></pre>
+<ul>
+<li><p>写完这句话之后，你就会发现，<a href="http://127.0.0.1:3000/socket.io/socket.io.js">http://127.0.0.1:3000/socket.io/socket.io.js</a>  就是一个js文件的地址了。</p>
+</li>
+<li><p>现在需要制作一个index页面，这个页面中，必须引用秘密js文件。调用io函数，取得socket对象。</p>
+</li>
+</ul>
+<pre><code class="lang-html">  &lt;!DOCTYPE html&gt;
+  &lt;html lang=&quot;en&quot;&gt;
+  &lt;head&gt;
+      &lt;meta charset=&quot;UTF-8&quot;&gt;
+      &lt;title&gt;Document&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+      &lt;h1&gt;我是index页面，我引用了秘密script文件&lt;/h1&gt;
+      &lt;script type=&quot;text/javascript&quot; src=&quot;/socket.io/socket.io.js&quot;&gt;&lt;/script&gt;
+      &lt;script type=&quot;text/javascript&quot;&gt;
+          //io对象得到一个SOCket
+          var socket = io();
+          socket.emit(&quot;tiwen&quot;,&quot;吃了么？&quot;);
+      &lt;/script&gt;
+  &lt;/body&gt;
+  &lt;/html&gt;
+</code></pre>
+<h3 id="0.5">基本传输数据：</h3>
+<ul>
+<li>socket.emit()用于发出一个自定义事件。</li>
+<li>socket.on()用于接收服务器发送的自定义事件。</li>
+</ul>
+<pre><code>      &lt;script type=&quot;text/javascript&quot;&gt;
+          //io对象得到一个SOCket
+          var socket = io();
+          //定义一个关键字的事件进行传输数据
+          socket.emit(&quot;tiwen&quot;,&quot;吃了么？&quot;);
+          //接收服务器定义的关键字事件传输过来的数据
+          socket.on(&quot;huida&quot;,function(msg){
+            console.log(&quot;服务器说：&quot; + msg);
+          });
+      &lt;/script&gt;
+</code></pre><pre><code>//建立一个socket通州，可以--定义关键字--事件进行--传输数据， 接收数据。
+io.on(&quot;connection&quot;,function(socket){
+  console.log(&quot;1个客户端连接了&quot;);
+  socket.on(&quot;tiwen&quot;,function(msg){
+    console.log(&quot;本服务器得到了一个提问&quot; + msg);
+    //再次定义个关键字进行数据传输。
+    socket.emit(&quot;huida&quot;,&quot;吃了&quot;);
+  });
+})
+//接收这个提问  msg就是穿过来的数据---吃了么
+</code></pre><ul>
+<li>这么来说的话，关键字的事件是可以无限定义，定义后就可以传输数据了。</li>
+<li>然后传输的数据可以为任何数据。</li>
+<li>每一个连接上来的用户都有一个socket，emit语句，是socket.emit()发出的，所以指的是向这个当前的客户端发出语句。</li>
+</ul>
+<h3 id="0.6">广播数据：</h3>
+<pre><code>io.on(&quot;connection&quot;,function(socket){
+  console.log(&quot;1个客户端连接了&quot;);
+  socket.on(&quot;tiwen&quot;,function(msg){
+    console.log(&quot;本服务器得到了一个提问&quot; + msg);
+    //向当前连接的所有用户发送信息---广播
+    io.emit(&quot;huida&quot;,&quot;吃了&quot;);
+  });
+})
+</code></pre><h3 id="0.7">聊天室：</h3>
+<pre><code>var express = require(&#39;express&#39;);
+var app = express();
+//socket.io公式：
+var http = require(&#39;http&#39;).Server(app);
+var io = require(&#39;socket.io&#39;)(http);
+//监听
+http.listen(3000);
+</code></pre>
+</article>
+<footer>
+<h3 id="0.8">开源协议</h3>
+<p>本程序基于MIT协议开源。</p>
+<pre><code>Copyright (c) cc.
+</code></pre>
+</footer>
+</body>
+
+<script>
+	var div = document.createElement("div"); 
+	var body = document.getElementsByTagName('body')[0];
+	console.log(body);
+div.id = 'back_index';	
+div.style.width = '200px';
+div.style.height = '200px';
+div.style.backgroundImage = "url(./back_index.png)";
+div.style.backgroundSize = 'cover';
+div.style.position = 'fixed';
+div.style.left = '0px';
+div.style.bottom = '20px';
+body.appendChild(div);
+document.write(div);
+div.onmouseover = function () {
+	/* body... */
+	div.style.animation = 'imgMoveOver 0.5s forwards';
+};
+div.onmouseout = function () {
+	/* body... */
+	div.style.animation = 'imgMoveOut 0.5s forwards';
+};
+div.onclick = function () {
+	/* body... */
+	window.location.href = "https://zc3hd.github.io/";
+};
+
+</script>
+
+</html>
