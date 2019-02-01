@@ -1,4 +1,4 @@
-# web Socket Socket.IO~c~
+# Socket.IO 聊天室
 
 ### 模拟实现：
 
@@ -8,7 +8,7 @@
 
 ### 实现原理：
 
-* WebSocket的原理非常的简单：利用HTTP请求产生握手，HTTP头部中含有WebSocket协议的请求，所以握手之后，二者转用TCP协议进行交流（QQ的协议）。现在的浏览器和服务器之间，就是QQ和QQ服务器的关系了。所以WebSocket协议，需要浏览器支持，更需要服务器支持。
+* WebSocket的原理非常的简单：利用HTTP请求产生握手，HTTP头部中含有WebSocket协议的请求，所以握手之后，二者转用TCP协议进行交流（QQ的协议）。现在浏览器和服务器之间，就是QQ和QQ服务器的关系了。所以WebSocket协议，需要浏览器支持，更需要服务器支持。
 * 支持WebSocket协议的浏览器有：Chrome 4、火狐4、IE10、Safari5
 * 支持WebSocket协议的服务器有：*Node 0*、Apach7.0.2、Nginx1.3
 
