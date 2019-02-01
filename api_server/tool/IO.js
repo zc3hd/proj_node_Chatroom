@@ -7,13 +7,16 @@ function Module(io) {
   var me = this;
   me.io = io;
 
+  // 收集所有通道
   me.all = {
     // 所有的通道
     socket: {
 
     },
-  }
+  };
 
+  // 模型
+  me.User_model = require('../collection/user.js');
 }
 Module.prototype = {
   init: function() {
@@ -70,10 +73,21 @@ Module.prototype = {
           me.all.socket[data._id].socket = socket;
           me.all.socket[data._id].all = data;
 
+          me.User_model
+            .findById(data._id)
+            .then(function(user) {
+
+              user.lng = data.lng;
+              user.lat = data.lat;
+
+              return user.save();
+            })
+            .then(function() {
+              // 新登记的人-->通知所有人
+              me._IO_emit_new_user(data);
+            });
 
 
-          // 新登记的人-->通知所有人
-          me._IO_emit_new_user(data);
         });
       },
       // 信息收到，给全部
