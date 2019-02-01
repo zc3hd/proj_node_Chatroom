@@ -1,17 +1,44 @@
 {
-  "name": "chatroom",
-  "version": "1.0.0",
-  "description": "* 长轮询：客户端每隔很短的时间，都会对服务器发出请求，查看是否有新的消息，只要轮询速度足够快，例如1秒，就能给人造成交互是实时进行的印象。这种做法是无奈之举，实际上对服务器、客户端双方都造成了大量的性能浪费。",
-  "main": "app.js",
-  "dependencies": {
-    "body-parser": "^1.17.1",
-    "express": "^4.13.3",
-    "socket.io": "^1.3.7"
-  },
-  "devDependencies": {},
+  "name": "cc",
+  "version": "0.0.1",
+  "description": "gulp",
+  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "set NODE_ENV=dev&&gulp",
+    "api": "set NODE_ENV=api&&node ./api_server/app_auto.js",
+    "esc_db": "set NODE_ENV=esc_db&&node ./cmd.js",
+    "db_dn": "set NODE_ENV=db_dn&&node ./cmd.js",
+    "db_up": "set NODE_ENV=db_up&&node ./cmd.js",
+    "git": "set NODE_ENV=git&&node ./cmd.js"
   },
   "author": "cc",
-  "license": "MIT"
+  "license": "ISC",
+  "devDependencies": {
+    "babel-core": "^6.26.2",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-es2015": "^6.24.1",
+    "browser-sync": "^2.17.5",
+    "cross-env": "^3.0.0",
+    "express": "^4.16.4",
+    "gulp": "^3.9.1",
+    "gulp-autoprefixer": "^5.0.0",
+    "gulp-babel": "^7.0.1",
+    "gulp-changed": "^3.2.0",
+    "gulp-cssnano": "^2.1.2",
+    "gulp-htmlmin": "^3.0.0",
+    "gulp-imagemin": "^4.1.0",
+    "gulp-less": "^3.3.0",
+    "gulp-nodemon": "^2.4.1",
+    "gulp-plumber": "^1.2.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-sourcemaps": "^2.6.4",
+    "gulp-uglify": "^2.1.2",
+    "imagemin-pngquant": "^5.1.0",
+    "mongoose": "^5.3.13"
+  },
+  "dependencies": {
+    "bluebird": "^3.5.0",
+    "fs-extra": "^2.1.2",
+    "socket.io": "^1.3.7"
+  }
 }

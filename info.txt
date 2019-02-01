@@ -1,0 +1,141 @@
+User:hc.zhang  pass:39lmwrRG
+
+
+测试mongoDB 数据库
+mongod --dbpath C:\dev\mongoDB_data\test
+
+
+mongoVUE 数据库开机
+mongod --storageEngine mmapv1 --dbpath C:\dev\mongoDB_data\test
+
+
+
+
+
+cors-2yi
+D:\047-company_eclipse\workspace\cors-mot\src\main\webapp
+cors-v1.0
+D:\047-company_eclipse\workspace\cors-mot-1.1\src\main\webapp
+
+
+
+
+
+野外救援
+D:\047-company_eclipse\workspace\sbss_rescue\src\main
+swjc 123456
+
+Cores-web
+D:\047-company_eclipse\workspace\cors\code\cors_web\src\main
+
+18911854714
+123456
+
+Cores
+D:\047-company_eclipse\workspace\cors\code\cors\src\main
+
+https://172.169.0.80/repos/cors/doc
+
+
+
+东城共享单车--大平台
+D:\047-company_eclipse\workspace\sbike_monitor\src\main
+
+自行车公共平台
+D:\047-company_eclipse\workspace\sbike_monitor_area
+-----------------------------------------------------------
+消防
+D:\047-company_eclipse\workspace\fire_cloud\src\main\webapp\pages
+admin *beidouxf
+
+物流
+D:\047-company_eclipse\workspace\dzcapcare
+
+嘉旅
+D:\047-company_eclipse\workspace\jlrental\src\main\webapp
+
+admin admin123
+
+DEMO
+C:\Users\dsjIOA\Desktop\learning\demo
+D:\000-my\002-北斗\learning\demo
+
+凯步
+D:\work\apache-tomcat-7.0.57\webapps\ROOT
+
+
+bike-app前端
+D:\047-company_eclipse\workspace\bike_app\Archive
+
+养老
+D:\047-company_eclipse\workspace\sifu\code\sifu_pro\src\main
+D:\047-company_eclipse\workspace\sifu\code\sifu_pro
+
+admin 123456
+----------------------------------------------------------
+
+天基--子系统
+D:\047-company_eclipse\workspace\sbss\src\main
+testyu 123456
+globalstar 123456
+
+天基--大系统
+D:\047-company_eclipse\workspace\sbs\src\main\webapp  
+ds.zhang  211521
+
+网约车
+D:\work\ideaWorkspace\sc_wangyueche\src\main\webapp\static\sichuang
+
+通州共享单车
+D:\047-company_eclipse\workspace\sbike_monitor\src\main\
+
+
+
+
+
+
+
+----------------------------------------------------------
+
+
+
+
+
+
+
+----------------------------------------------------------
+Google map key   
+AIzaSyA3XWo-MAypDVLlJ4Eihb69FewgftvnvFo
+
+Gaode-key
+个人
+f738b7af33f9c1fdf11687f8c975ecea
+公司
+512f87af07e8fed211449bef4fb603d9
+
+
+BDmap key
+公司
+lS2AIbYR7EboAP238v2vkNY3
+
+
+天地图
+5880e32505b66afdc29e516f34573181
+---------------------------------------------------------
+
+ccpage -i   生成github--gh-pages分支的项目目录结构 提交到github
+
+cc-pac -i ./  找到hexo  放md文件，爬我的github
+
+hexo d -g 发布博客
+
+---------------------------------------------------------
+
+http-server ./webapp -p 1235
+
+
+---------------------------------------------------------
+ipconfig   获取本机地址
+
+eventvwr.msc 开机时间
+

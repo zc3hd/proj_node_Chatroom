@@ -1,0 +1,137 @@
+* {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  white-space: nowrap;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+}
+
+.app {
+  width: 100%;
+  height: 100%;
+  >.p_canvas {
+    width: 100%;
+    height: 100%;
+    background: url('./img/bg.jpg');
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+    font-size: 10px;
+    position: relative;
+    >#background {
+      position: absolute;
+      display: block;
+      top: 0;
+      left: 0;
+      z-index: 0;
+    }
+    // 
+    >.login_btn {
+      width: 100px;
+      height: 40px;
+      line-height: 40px;
+      font-size: 14px;
+      background-color: rgba(0, 0, 0, 0.6);
+      text-align: center;
+      color: #fff;
+      cursor: pointer;
+      border-radius: 5px;
+      position: absolute;
+      left: 50%;
+      bottom: 100px;
+      transform: translate(-50%, -50%);
+    }
+    >.info {
+      position: relative;
+      left: 50%;
+      top: 45%;
+      transform: translate(-50%, -50%);
+      width: 400px;
+      height: 50px;
+      color: #fff;
+      font-size: 30px;
+      text-align: center;
+    }
+  }
+}
+
+.cc_layer {
+  background-color: rgba(0, 0, 0, 0.5)!important;
+  box-shadow: 0px 0px 50px #fff!important;
+  >.layui-layer-content {
+    overflow: visible!important;
+    >.box {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      >input {
+        display: block;
+        width: 100%;
+        height: 30px;
+        border: none;
+        box-sizing: border-box;
+        padding-left: 10px;
+        border: 1px solid rgba(0, 0, 0, .15);
+        border-radius: 4px;
+        color: #000;
+        outline: none;
+        font-size: 18px;
+        font-weight: 600;
+      }
+      >.name{
+        margin-bottom: 5px;
+      }
+      // 登录按钮
+      >.yes {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        width: 30px;
+        height: 30px;
+        transform: translate(50%, 50%);
+        border-radius: 15px;
+        background: url('./img/yes.png') blue;
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-size: cover;
+        cursor: pointer;
+      }
+      // 登录按钮
+      >.login {
+        position: absolute;
+        top: 0;
+        left: -35px;
+        width: 30px;
+        height: 30px;
+        background: url('./img/login.png');
+        background-color: rgba(0, 0, 0, 0.3);
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-size: cover;
+        cursor: pointer;
+      }
+      >.reg {
+        position: absolute;
+        top: 35px;
+        left: -35px;
+        width: 30px;
+        height: 30px;
+        background: url('./img/reg.png');
+        background-color: rgba(0, 0, 0, 0.3);
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-size: cover;
+        cursor: pointer;
+      }
+      >.ac {
+        background-color: rgba(0, 0, 0, 0.5);
+        box-shadow: 0px 0px 40px #fff;
+      }
+    }
+  }
+}

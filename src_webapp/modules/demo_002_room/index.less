@@ -1,0 +1,565 @@
+* {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  white-space: nowrap;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+}
+
+@list_w: 260px;
+// 性别颜色
+@1_color: #7acdf9;
+@0_color: #f17a6a;
+
+// 你我颜色
+@_color: #7acdf9;
+@me_color: #fff;
+.app {
+  width: 100%;
+  height: 100%;
+  >.box {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    >.map {
+      width: 100%;
+      height: 100%;
+      background-color: #333;
+    }
+    //
+    >.list {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 2;
+      width: @list_w;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.6);
+      box-shadow: 0px 0px 50px #fff;
+      box-sizing: border-box;
+      padding-top: 40px;
+      transition: all 0.1s ease-in;
+      // 折叠按钮
+      >.view {
+        position: absolute;
+        top: 0;
+        right: -40px;
+        width: 40px;
+        height: 40px;
+        cursor: pointer;
+        box-shadow: 0px 0px 30px #fff;
+      }
+      >.hide {
+        background: url('./img/hide.png');
+        background-color: rgba(0, 0, 0, 0.6);
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-size: 26px;
+      }
+      >.show {
+        background: url('./img/show.png');
+        background-color: rgba(0, 0, 0, 0.6);
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-size: 26px;
+      }
+      // 聊天室的头部
+      >.header {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 40px;
+        background-color: rgba(0, 0, 0, 0.6);
+        box-sizing: border-box;
+        padding-right: 120px;
+        >.title {
+          width: 100%;
+          height: 100%;
+          line-height: 40px;
+          text-align: center;
+          color: blue;
+          font-size: 12px;
+          font-weight: 600;
+        }
+        // 我的信息
+        >.upd_info {
+          position: absolute;
+          top: 0;
+          right: 80px;
+          width: 40px;
+          height: 100%;
+          box-sizing: border-box;
+          border-left: 1px solid blue;
+          background: url('./img/user.png');
+          background-repeat: no-repeat;
+          background-position: center center;
+          background-size: 26px;
+          cursor: pointer;
+        }
+        // 我的信息
+        >.upd_ps {
+          position: absolute;
+          top: 0;
+          right: 40px;
+          width: 40px;
+          height: 100%;
+          box-sizing: border-box;
+          border-left: 1px solid blue;
+          background: url('./img/upd.png');
+          background-repeat: no-repeat;
+          background-position: center center;
+          background-size: 26px;
+          cursor: pointer;
+        }
+        // 退出按钮
+        >.out {
+          position: absolute;
+          top: 0;
+          right: 0px;
+          width: 40px;
+          height: 100%;
+          box-sizing: border-box;
+          border-left: 1px solid blue;
+          background: url('./img/out.png');
+          background-repeat: no-repeat;
+          background-position: center center;
+          background-size: 26px;
+          cursor: pointer;
+        }
+      }
+      // 聊天内容区
+      >.content {
+        width: 100%;
+        height: 100%;
+        // overflow: hidden;
+        overflow: auto;
+        >.item {
+          position: relative;
+          width: 100%;
+          height: 50px;
+          color: #000;
+          box-sizing: border-box;
+          padding-left: 50px;
+          >.head {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            >.img {
+              position: absolute;
+              top: 0;
+              left: 0;
+              width: 50px;
+              height: 30px;
+              >.arrow {
+                position: absolute;
+                top: 50%;
+                right: -5px;
+                border-width: 5px 8px 5px 0px;
+                width: 0;
+                height: 0;
+                border-color: transparent;
+                border-style: solid;
+                border-right-color: @1_color;
+              }
+            }
+            >.img_1 {
+              background: url('./img/1.png');
+              background-repeat: no-repeat;
+              background-position: center center;
+              background-size: 26px;
+            }
+            >.img_0 {
+              background: url('./img/0.png');
+              background-repeat: no-repeat;
+              background-position: center center;
+              background-size: 26px;
+            }
+            >.name {
+              position: absolute;
+              bottom: 0;
+              left: 0;
+              width: 50px;
+              height: 20px;
+              text-align: center;
+              line-height: 20px;
+              color: @1_color;
+              font-size: 12px;
+              overflow: hidden;
+              text-overflow: ellipsis;
+            }
+          }
+          >.head:hover {
+            box-shadow: 0px 0px 20px #fff;
+          }
+          >.info_box {
+            width: 100%;
+            height: 100%;
+            box-sizing: border-box;
+            padding: 5px;
+            padding-right: 10px;
+            position: relative;
+            >.info {
+              width: 100%;
+              border-radius: 5px;
+              box-sizing: border-box;
+              border: 1px solid @1_color;
+              padding: 5px;
+              white-space: pre-wrap;
+              font-size: 14px;
+              color: @1_color;
+            }
+          }
+        }
+        >.item_1 {
+          >.head {
+            >.img {
+              >.arrow {
+                border-right-color: @1_color;
+              }
+            }
+            >.img {
+              background: url('./img/1.png');
+              background-repeat: no-repeat;
+              background-position: center center;
+              background-size: 26px;
+            }
+            >.name {
+              color: @1_color;
+            }
+          }
+          >.info_box {
+            >.info {
+              border: 1px solid @1_color;
+              color: @1_color;
+            }
+          }
+        }
+        >.item_0 {
+          >.head {
+            >.img {
+              >.arrow {
+                border-right-color: @0_color;
+              }
+            }
+            >.img {
+              background: url('./img/0.png');
+              background-repeat: no-repeat;
+              background-position: center center;
+              background-size: 26px;
+            }
+            >.name {
+              color: @0_color;
+            }
+          }
+          >.info_box {
+            >.info {
+              border: 1px solid @0_color;
+              color: @0_color;
+            }
+          }
+        }
+      }
+    }
+    // 输入区
+    >.ipt_box_f {
+      position: absolute;
+      z-index: 1;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 36px;
+      box-sizing: border-box;
+      padding-left: @list_w;
+      transition: all 0.1s ease-in;
+      // 
+      >.ipt_box {
+        position: relative;
+        width: 100%;
+        height: 36px;
+        background-color: #fff;
+        box-shadow: 0px 0px 50px #fff;
+        box-sizing: border-box;
+        padding-right: 100px;
+        >.btn {
+          position: absolute;
+          top: 0;
+          right: 0;
+          width: 100px;
+          height: 100%;
+          background-color: blue;
+          cursor: pointer;
+          line-height: 36px;
+          text-align: center;
+          color: #fff;
+          font-size: 18px;
+          font-weight: 600;
+        }
+        >.info {
+          width: 100%;
+          height: 100%;
+          >input {
+            width: 100%;
+            height: 100%;
+            border: none;
+            box-sizing: border-box;
+            padding-left: 10px;
+            border: 1px solid rgba(0, 0, 0, .15);
+            border-radius: 4px;
+            color: #000;
+            outline: none;
+            font-size: 18px;
+            font-weight: 600;
+          }
+        }
+      }
+    }
+  }
+}
+
+.cc_layer {
+  background-color: rgba(0, 0, 0, 0.1)!important;
+  box-shadow: 0px 0px 50px #fff!important;
+  >.layui-layer-content {
+    overflow: visible!important;
+    >.box {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      // 
+      >.yes {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        width: 30px;
+        height: 30px;
+        transform: translate(50%, 50%);
+        border-radius: 15px;
+        background: url('./img/yes.png') blue;
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-size: cover;
+        cursor: pointer;
+      }
+      // ========================退出的样式
+      >.out_info {
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        color: @1_color;
+        font-size: 20px;
+        font-weight: 600;
+        line-height: 60px;
+      }
+      // ========================修改个人信息的样式
+      >.my_info {
+        width: 100%;
+        height: 40px;
+        line-height: 40px;
+        position: relative;
+        box-sizing: border-box;
+        padding-left: 80px;
+        >.title {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 80px;
+          height: 100%;
+          text-align: center;
+          color: @1_color;
+        }
+        >.ipt {
+          width: 100%;
+          height: 100%;
+          box-sizing: border-box;
+          position: relative;
+          >input {
+            position: absolute;
+            top: 50%;
+            left: 0%;
+            transform: translate(0%, -50%);
+            width: 90%;
+            height: 60%;
+            border: none;
+            box-sizing: border-box;
+            border: 1px solid rgba(0, 0, 0, .15);
+            padding-left: 10px;
+            border-radius: 4px;
+            color: #000;
+            outline: none;
+            font-size: 14px;
+            font-weight: 600;
+          }
+          >select {
+            position: absolute;
+            top: 50%;
+            left: 0%;
+            transform: translate(0%, -50%);
+            width: 90%;
+            height: 60%;
+            border: none;
+            box-sizing: border-box;
+            border: 1px solid rgba(0, 0, 0, .15);
+            padding-left: 10px;
+            border-radius: 4px;
+            color: #000;
+            outline: none;
+            font-size: 14px;
+            font-weight: 600;
+          }
+        }
+      }
+      >.content {
+        width: 100%;
+        height: 100%;
+      }
+    }
+    // ========================新信息来的盒子
+    >.new_info_box {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      box-sizing: border-box;
+      padding-bottom: 40px;
+      padding-top: 30px;
+      // 表头
+      >.title {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 30px;
+        background-color: blue;
+        box-sizing: border-box;
+        padding-left: 15px;
+        line-height: 30px;
+        color: #fff;
+        font-size: 14px;
+        font-weight: 600;
+      }
+      // 内容区
+      >.content {
+        width: 100%;
+        height: 100%;
+        >.item {
+          position: relative;
+          width: 100%;
+          height: 30px;
+          color: #000;
+          box-sizing: border-box;
+          padding-left: 50px;
+          >.head {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 50px;
+            height: 30px;
+            box-sizing: border-box;
+            padding-top: 5px;
+            text-align: center;
+            color: @_color;
+            font-size: 12px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+          >.info_box {
+            width: 100%;
+            height: 100%;
+            >.info {
+              width: 100%;
+              box-sizing: border-box;
+              padding: 5px;
+              white-space: pre-wrap;
+              font-size: 12px;
+              color: @_color;
+            }
+          }
+        }
+        // 自己的信息
+        >.item_me {
+          position: relative;
+          width: 100%;
+          height: 30px;
+          color: #000;
+          box-sizing: border-box;
+          padding-right: 50px;
+          >.head {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 50px;
+            height: 30px;
+            box-sizing: border-box;
+            padding-top: 5px;
+            text-align: center;
+            color: @me_color;
+            font-size: 12px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+          >.info_box {
+            width: 100%;
+            height: 100%;
+            >.info {
+              text-align: right;
+              width: 100%;
+              box-sizing: border-box;
+              padding: 5px;
+              white-space: pre-wrap;
+              font-size: 12px;
+              color: @me_color;
+            }
+          }
+        }
+      }
+      // 输入区
+      >.ipt_box {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: 40px;
+        box-sizing: border-box;
+        padding-right: 80px;
+        >.ipt {
+          width: 100%;
+          height: 100%;
+          >input {
+            width: 100%;
+            height: 100%;
+            border: none;
+            box-sizing: border-box;
+            border: 2px solid rgba(0,0,0,0.9);
+            padding-left: 10px;
+            color: #000;
+            outline: none;
+            font-size: 14px;
+            font-weight: 600;
+          }
+        }
+        >.btn {
+          position: absolute;
+          top: 0;
+          right: 0;
+          width: 80px;
+          height: 100%;
+          line-height: 40px;
+          text-align: center;
+          background-color: blue;
+          color: #fff;
+          font-size: 14px;
+          font-weight: 600;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}

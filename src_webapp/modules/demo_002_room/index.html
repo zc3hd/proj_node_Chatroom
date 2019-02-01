@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>w_chat</title>
+  <!-- layer -->
+  <link href="../../scripts/lib/layer/skin/layer.css" rel="stylesheet">
+  <!-- css -->
+  <link href="./index.css" rel="stylesheet">
+</head>
+
+<body>
+  <div id="app" class="app">
+    <div class="box">
+      <div class="map" id="map"></div>
+
+      <!-- 用户聊天区 -->
+      <div class="list" id="list">
+        <!-- 折叠 -->
+        <div class="view hide" key=1 id="view"></div>
+        <!-- 标头 -->
+        <div class="header">
+          <div class="title">Armincc chatRoom</div>
+          <div class="upd_info" id="upd_info"></div>
+          <div class="upd_ps" id="upd_ps"></div>
+          <div class="out" id="out"></div>
+          
+        </div>
+        
+        <!-- 内容区 -->
+        <div class="content" id="content">
+          <!-- 1 -->
+          <div class="item item_1">
+            <!-- 头部 -->
+            <div class="head" >
+              <div class="img">
+                <div class="arrow"></div>
+              </div>
+              <div class="name">机器人</div>
+            </div>
+            <!-- info -->
+            <div class="info_box">
+              <div class="info">欢迎大家来到armincc chatRoom</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- 输入区域 -->
+      <div class="ipt_box_f" id="ipt_box_f">
+        <div class="ipt_box">
+          <div class="info">
+            <input type="text" placeholder="type something here.." id="new_ipt" >
+            
+          </div>
+          <div class="btn" id="enter">enter</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- jq -->
+  <script src="../../scripts/lib/jquery/jquery.js"></script>
+  <!-- common -->
+  <script src="../../scripts/common/common.js"></script>
+  <!-- conf -->
+  <script src="../../scripts/common/conf.js"></script>
+  <!-- io -->
+  <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+  <!-- scroll -->
+  <script src="../../scripts/lib/nicescroll/jquery.nicescroll.min.js"></script>
+  <!-- layer -->
+  <script type="text/javascript" src="../../scripts/lib/layer/layer.js"></script>
+  <!-- test -->
+  <script type="text/javascript" src="./test.js"></script>
+  <!-- index -->
+  <script src="./index.js"></script>
+  <script type="text/javascript">
+  $(function() {
+    new Model().init();
+  });
+  </script>
+</body>
+
+</html>

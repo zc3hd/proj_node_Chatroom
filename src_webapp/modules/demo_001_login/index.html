@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>w_chat</title>
+  <!-- layer -->
+  <link href="../../scripts/lib/layer/skin/layer.css" rel="stylesheet">
+  <!-- css -->
+  <link href="./index.css" rel="stylesheet">
+</head>
+
+<body>
+  <div id="main_index" class="app">
+    <div class="p_canvas">
+      <canvas id="background"></canvas>
+      <div class="info">Go chat :)</div>
+      <div class="login_btn" id="sign_in">sign in</div>
+    </div>
+  </div>
+  <!-- jq -->
+  <script src="../../scripts/lib/jquery/jquery.js"></script>
+  <!-- common -->
+  <script src="../../scripts/common/common.js"></script>
+  <!-- conf -->
+    <script src="../../scripts/common/conf.js"></script>
+  <!-- 粒子背景 -->
+  <script src="../../scripts/lib/particles/dist/particles.min.js"></script>
+  <!-- layer -->
+  <script type="text/javascript" src="../../scripts/lib/layer/layer.js"></script>
+  <!-- index -->
+  <script src="./index.js"></script>
+  <script type="text/javascript">
+  $(function() {
+    new Login().init();
+  });
+  </script>
+</body>
+
+</html>
