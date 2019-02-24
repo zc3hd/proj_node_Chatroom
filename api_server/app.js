@@ -53,7 +53,7 @@ function API(app,io) {
 
   // 启动IO服务
   var IO = require('./tool/IO.js');
-  new IO(io).init();
+  new IO(io,app).init();
 }
 
 

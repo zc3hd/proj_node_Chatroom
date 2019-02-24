@@ -43,6 +43,9 @@
         lng: 116.34572,
         lat: 39.97691,
       },
+
+      // ============================用户定位相关
+      loc_key: null,
     };
 
 
@@ -59,6 +62,7 @@
 
       // DOM事件
       me.ev();
+
       // 接受大管道的事件 通道这种东西，只能绑定一次
       me._receiveIO();
 
@@ -75,34 +79,98 @@
           me.map = new AMap.Map("map", {
             mapStyle: 'amap://styles/macaron',
           });
-          me._map_tool(cb);
-        },
-        _map_tool: function(cb) {
-          AMap.plugin('AMap.Geolocation', function() {
-            me.all.map.tool = new AMap.Geolocation({
-              enableHighAccuracy: true, //是否使用高精度定位，默认:true
-              timeout: 10000, //超过10秒后停止定位，默认：5s
-              buttonPosition: 'RT', //定位按钮的停靠位置
-              buttonOffset: new AMap.Pixel(10, 10), //定位按钮与设置的停靠位置的偏移量，默认：Pixel(10, 20)
-              zoomToAccuracy: true, //定位成功后是否自动调整地图视野到定位点
-              showMarker: false,
+          // 加载工具
+          me._map_tool()
+            .then(function(data) {
+              console.log(data);
+              return me._map_loc()
+            })
+            .then(function (data) {
+              console.log(data);
+              cb&&cb();
             });
-            me.map.addControl(me.all.map.tool);
+
+        },
+        _map_tool: function() {
+          return newleHighAccuracy: false, //是否使用高精度定位，默认:true
+                timeout: 10000, //超过10秒后停止定位，默认：5s Promise(function(resolve, reject) {
+            AMap.plugin('AMap.Geolocation', function() {
+              me.all.map.tool = new AMap.Geolocation({
+                enab
+                buttonPosition: 'RT', //定位按钮的停靠位置
+                buttonOffset: new AMap.Pixel(10, 10), //定位按钮与设置的停靠位置的偏移量，默认：Pixel(10, 20)
+                zoomToAccuracy: false, //定位成功后是否自动调整地图视野到定位点
+                showMarker: false,
+              });
+              me.map.addControl(me.all.map.tool);
+              // loc_fn && loc_fn();
+              resolve("tool_init");
+            });
+          });
+
+        },
+        // 浏览器定位
+        _map_loc: function() {
+          return new Promise(function(resolve, reject) {
             me.all.map.tool.getCurrentPosition(function(status, result) {
+              // console.log(result);
               if (status == 'complete') {
                 me.all.map.lng = result.position.lng;
                 me.all.map.lat = result.position.lat;
+
+                // 可以定位
+                me.all.loc_key = true;
               }
               // 
               else {
-                layer.msg('您的浏览器不支持定位，默认位置设置为北京');
+
+                // 不能定位
+                me.all.loc_key = false;
+                // 
+                layer.msg('浏览器不支持定位，您的默认位置为北京');
                 me.all.map.lng = me.all.map.lng + (Math.random() > 0.5 ? Math.random() : -Math.random());
                 me.all.map.lat = me.all.map.lat + (Math.random() > 0.5 ? Math.random() : -Math.random());
               }
-              cb && cb();
+
+              // cb && cb();
+              resolve("loc_init");
+
             });
           });
+
         },
+        // 用户marker
+        _map_user: function() {
+          var marker = new AMap.Marker({
+            // icon: "http://webapi.amap.com/theme/v1.3/markers/n/mark_b.png",
+            position: [me.all.user_obj.lng, me.all.user_obj.lat],
+            offset: new AMap.Pixel(-15, 0),
+            icon: new AMap.Icon({
+              size: new AMap.Size(30, 30), //图标大小
+              imageSize: new AMap.Size(30, 30),
+              image: `./img/map_${me.all.user_obj.sex}.png`,
+              // imageOffset: new AMap.Pixel(5, 5)
+            }),
+          });
+
+          marker.setMap(me.map);
+
+          console.log(marker);
+          // var markerContent = '' +
+          //   '<div class="custom-content-marker">' +
+          //   '   <img src="//a.amap.com/jsapi_demos/static/demo-center/icons/dir-via-marker.png">' +
+          //   '   <div class="close-btn" onclick="clearMarker()">X</div>' +
+          //   '</div>';
+
+          // var marker = new AMap.Marker({
+          //   position: position,
+          //   // 将 html 传给 content
+          //   content: markerContent,
+          //   // 以 icon 的 [center bottom] 为原点
+          //   offset: new AMap.Pixel(-13, -30)
+          // });
+        },
+
 
 
 
@@ -431,11 +499,14 @@
               if ($('#new_ipt').val() == '') {
                 return;
               }
-              // 发出
+              // 发出信息
               me._io_emit_new_info({
                 _id: window.sessionStorage.getItem("_id"),
                 info: $('#new_ipt').val()
               });
+
+
+              // 时刻定位相关
 
               $('#new_ipt').val("");
             });
@@ -446,6 +517,13 @@
             .on('input', function() {
               me.all.enter_key = 'enter';
             });
+        },
+        // 公屏上的定位相关
+        ev_common_loc: function() {
+          // 
+          if (me.all.loc_key) {
+
+          }
         },
         // ==========================================
         // 公共选择一个进入私聊
@@ -679,15 +757,10 @@
 
 
 
-        _tets: function() {
-          var marker = new AMap.Marker({
-            // icon: "http://webapi.amap.com/theme/v1.3/markers/n/mark_b.png",
-            position: [item.lng, item.lat],
-            offset: new AMap.Pixel(-28, -66), //相对于基点的偏移位置
-          });
 
-          marker.setMap(me.map);
-        },
+
+
+
         // ============================================接受的全是大管道
         _receiveIO: function() {
           // 
@@ -771,6 +844,9 @@
 
               // ID信息登记
               me._io_emit_id_info(me.all.user_obj);
+
+              // 用户定位
+              me._map_user();
             });
         },
 

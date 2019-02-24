@@ -3,9 +3,14 @@ var FN = require('./common.js');
 
 
 
-function Module(io) {
+function Module(io, app) {
   var me = this;
   me.io = io;
+
+  // 
+  me.app = app;
+  // 路由
+  me.router = require('express').Router();
 
   // 收集所有通道
   me.all = {
@@ -40,12 +45,42 @@ Module.prototype = {
 
       // 新信息给个人
       me._new_info_one(socket);
+    });
 
+
+    // 配置前缀
+    me.api_pro = '/api/user';
+
+    // save_loc
+    me.router.post('/save_loc.do', function(req, res) {
+      me._save_loc(req, res);
     });
   },
   _bind: function() {
     var me = this;
     var fns = {
+      // 保存位置
+      _save_loc: function(req, res) {
+        var me = this;
+        me.User_model
+          .findById(req.body._id)
+          .then(function(data) {
+
+            data.lng = req.body.lng;
+            data.lat = req.body.lat;
+
+            return data.save();
+          })
+          .then(function(data) {
+            res.send(data);
+          });
+      },
+
+
+
+
+
+
       // 大通道连接
       _IO_connect: function(cb) {
         me.io.on("connection", function(socket) {
@@ -125,7 +160,7 @@ Module.prototype = {
           // me.all.socket[data._id] = null;
         });
       },
-      //  信息收到，给个人
+      // 信息收到，给个人
       _new_info_one: function(socket) {
 
         socket.on('new_info_one', function(data) {
