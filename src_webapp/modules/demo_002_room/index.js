@@ -383,17 +383,21 @@
                       // 
                       layer.close(index);
 
-                      // 通知后台退出
-                      me._io_emit_id_out({ _id: window.sessionStorage.getItem("_id") });
-
-                      // 
-                      window.sessionStorage.removeItem("_id");
-                      // me._init();
-                      me._page_1();
+                      // 点击确认退出
+                      me.ev_out_done();
                     });
                 },
               });
             });
+        },
+        // 点击确认退出
+        ev_out_done: function() {
+          // 通知后台退出
+          me._io_emit_id_out({ _id: window.sessionStorage.getItem("_id") });
+
+          // 跳转;
+          window.sessionStorage.removeItem("_id");
+          me._page_1();
         },
 
 
@@ -432,15 +436,18 @@
             // 清除
             marker = null;
           }
-
         },
         // 公屏有新用户marker的新信息
         _marker_user_info: function() {
           // 可能要初始化这个用户点
           me._marker_user_init();
-          
+
           // 再改变信息；
           $(`#mk_${chat_data._id}`).html(chat_data.info);
+        },
+        // 公屏用户点离线
+        _marker_user_out:function () {
+          me.map.remove(me.all.map_user[chat_data._id]);
         },
 
 
@@ -847,14 +854,26 @@
           me.io.on("all_new_info", function(data) {
 
             chat_data = data;
-
             console.log(data);
+
 
             // 公屏新信息；
             me.ev_common_new();
 
-            // 公屏地图新信息；
-            me._marker_user_info();
+            // 退出的地图操作
+            if (data.key == 'out') {
+              // 离线操作
+              me._marker_user_out()
+            }
+            // 正常的信息
+            else {
+              // 公屏地图新信息；
+              me._marker_user_info();
+            }
+
+
+
+
           });
         },
         // 接受大管道的信息：个人信息：

@@ -114,11 +114,8 @@ Module.prototype = {
         });
       },
 
-      // =====================================大管道的所有注册的事件
 
-
-
-      // =====================================当前连接的注册的管道
+      // ====================================服务器 收到 新的信息
       // 信息登记
       _id_info: function(socket) {
         socket.on('id_info', function(data) {
@@ -163,7 +160,7 @@ Module.prototype = {
       },
 
 
-
+      // ====================================服务器 收到 新的信息
       // 信息收到，给全部
       _new_info: function(socket) {
         var obj = null;
@@ -182,12 +179,12 @@ Module.prototype = {
           me._IO_emit_new_info(obj);
         });
       },
-
       // 大通道通知所有连接
       _IO_emit_new_info: function(data) {
         me.io.emit("all_new_info", data);
       },
 
+      // ====================================服务器 收到 新的信息
       // 用户下线
       _id_out: function(socket) {
         var obj = null;
@@ -198,6 +195,8 @@ Module.prototype = {
             net_name: me.all.socket[data._id].all.net_name,
             sex: me.all.socket[data._id].all.sex,
             info: `该用户已经下线`,
+            // 标识为下线
+            key:"out",
           };
           // 
           // 通知
