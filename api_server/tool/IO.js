@@ -55,6 +55,13 @@ Module.prototype = {
     me.router.post('/save_loc.do', function(req, res) {
       me._save_loc(req, res);
     });
+
+    // upd_info
+    me.router.post('/upd_info.do', function(req, res) {
+      me._upd_info(req, res);
+    });
+
+    me.app.use(me.api_pro, me.router);
   },
   _bind: function() {
     var me = this;
@@ -68,6 +75,25 @@ Module.prototype = {
 
             data.lng = req.body.lng;
             data.lat = req.body.lat;
+
+            return data.save();
+          })
+          .then(function(data) {
+            res.send(data);
+          });
+      },
+      // 跟新信息
+      _upd_info: function(req, res) {
+        me.User_model
+          .findById(req.body._id)
+          .then(function(data) {
+            // socket对象体信息变更
+            me.all.socket[req.body._id].all.net_name = req.body.net_name;
+            me.all.socket[req.body._id].all.sex = req.body.sex;
+
+            // 数据库保存
+            data.net_name = req.body.net_name;
+            data.sex = req.body.sex;
 
             return data.save();
           })
@@ -89,23 +115,23 @@ Module.prototype = {
       },
 
       // =====================================大管道的所有注册的事件
-      // 大通道通知所有连接
-      _IO_emit_new_user: function(data) {
-        me.io.emit("new_user", data);
-      },
-      // 大通道通知所有连接
-      _IO_emit_new_info: function(data) {
-        me.io.emit("all_new_info", data);
-      },
+
 
 
       // =====================================当前连接的注册的管道
       // 信息登记
       _id_info: function(socket) {
         socket.on('id_info', function(data) {
-
+          // console.log(data);
           me.all.socket[data._id] = {};
+          // 这个socket就有意思了，可以理解为客户端过来的socket
+          // 这个socket就是可以在服务端，向这个客户端发送信息；
           me.all.socket[data._id].socket = socket;
+
+
+          // 登记过来的信息；
+          data.lng = data.lng + me._map_loc_random();
+          data.lat = data.lat + me._map_loc_random();
           me.all.socket[data._id].all = data;
 
           me.User_model
@@ -115,16 +141,29 @@ Module.prototype = {
               user.lng = data.lng;
               user.lat = data.lat;
 
+              // user_data = user;
+              // console.log(user_data);
               return user.save();
             })
             .then(function() {
+
               // 新登记的人-->通知所有人
               me._IO_emit_new_user(data);
             });
 
-
         });
       },
+      // 随机定位值
+      _map_loc_random: function() {
+        return Math.random() > 0.5 ? Math.random() * 0.001 : -Math.random() * 0.001;
+      },
+      // 大通道通知所有连接
+      _IO_emit_new_user: function(data) {
+        me.io.emit("new_user", data);
+      },
+
+
+
       // 信息收到，给全部
       _new_info: function(socket) {
         var obj = null;
@@ -135,12 +174,20 @@ Module.prototype = {
             _id: data._id,
             sex: me.all.socket[data._id].all.sex,
             info: data.info,
+            lng:me.all.socket[data._id].all.lng,
+            lat:me.all.socket[data._id].all.lat,
           };
           // console.log(obj);
           // 通知新
           me._IO_emit_new_info(obj);
         });
       },
+
+      // 大通道通知所有连接
+      _IO_emit_new_info: function(data) {
+        me.io.emit("all_new_info", data);
+      },
+
       // 用户下线
       _id_out: function(socket) {
         var obj = null;
@@ -166,6 +213,8 @@ Module.prototype = {
         socket.on('new_info_one', function(data) {
           // console.log(data);
           data.from_net_name = me.all.socket[data.from].all.net_name;
+
+          // 要接受对象的
           me.all.socket[data.to].socket.emit('new_info_one', data);
         });
       },

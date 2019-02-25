@@ -132,3 +132,6 @@ var io = require('socket.io')(http);
 //监听
 http.listen(3000);
 ```
+
+
+* 测试时，不要在一个IP和port下测试。会出现意想不到的问题；

@@ -1,6 +1,8 @@
 (function($) {
   function Model() {
     var me = this;
+
+    // 
     me.api = {
       // 找用户信息
       find: {
@@ -43,6 +45,10 @@
         lng: 116.34572,
         lat: 39.97691,
       },
+      // 地图对象收集
+      map_user: {
+
+      },
 
       // ============================用户定位相关
       loc_key: null,
@@ -76,27 +82,40 @@
       var me = this;
       var fns = {
         _map: function(cb) {
-          me.map = new AMap.Map("map", {
-            mapStyle: 'amap://styles/macaron',
-          });
-          // 加载工具
-          me._map_tool()
-            .then(function(data) {
-              console.log(data);
-              return me._map_loc()
-            })
-            .then(function (data) {
-              console.log(data);
-              cb&&cb();
+
+          // 存在该用户
+          if (window.sessionStorage.getItem("_id")) {
+            // 地图
+            me.map = new AMap.Map("map", {
+              mapStyle: 'amap://styles/macaron',
+              zooms: [3, 20],
             });
 
+            // 加载工具
+            me._map_tool()
+              .then(function(data) {
+                console.log(data);
+
+                // 浏览器开始定位
+                return me._map_loc()
+              })
+              .then(function(data) {
+                console.log(data);
+                cb && cb();
+              });
+          }
+          // 没有ID，就退出
+          else {
+            window.location.href = '../demo_001_login/index.html';
+          }
         },
+        // 加载工具
         _map_tool: function() {
-          return newleHighAccuracy: false, //是否使用高精度定位，默认:true
-                timeout: 10000, //超过10秒后停止定位，默认：5s Promise(function(resolve, reject) {
+          return new Promise(function(resolve, reject) {
             AMap.plugin('AMap.Geolocation', function() {
               me.all.map.tool = new AMap.Geolocation({
-                enab
+                newleHighAccuracy: false, //是否使用高精度定位，默认:true
+                timeout: 10000, //超过10秒后停止定位，默认：5s Promise(function(resolve, reject) {
                 buttonPosition: 'RT', //定位按钮的停靠位置
                 buttonOffset: new AMap.Pixel(10, 10), //定位按钮与设置的停靠位置的偏移量，默认：Pixel(10, 20)
                 zoomToAccuracy: false, //定位成功后是否自动调整地图视野到定位点
@@ -107,7 +126,6 @@
               resolve("tool_init");
             });
           });
-
         },
         // 浏览器定位
         _map_loc: function() {
@@ -115,7 +133,8 @@
             me.all.map.tool.getCurrentPosition(function(status, result) {
               // console.log(result);
               if (status == 'complete') {
-                me.all.map.lng = result.position.lng;
+                // console.log(me._map_loc_random());
+                me.all.map.lng = result.position.lng
                 me.all.map.lat = result.position.lat;
 
                 // 可以定位
@@ -127,9 +146,9 @@
                 // 不能定位
                 me.all.loc_key = false;
                 // 
-                layer.msg('浏览器不支持定位，您的默认位置为北京');
-                me.all.map.lng = me.all.map.lng + (Math.random() > 0.5 ? Math.random() : -Math.random());
-                me.all.map.lat = me.all.map.lat + (Math.random() > 0.5 ? Math.random() : -Math.random());
+                layer.msg('当前浏览器不支持定位，您的默认位置为北京，可使用最新IE浏览器，开启定位功能进行体验。');
+                me.all.map.lng = me.all.map.lng;
+                me.all.map.lat = me.all.map.lat;
               }
 
               // cb && cb();
@@ -137,40 +156,7 @@
 
             });
           });
-
         },
-        // 用户marker
-        _map_user: function() {
-          var marker = new AMap.Marker({
-            // icon: "http://webapi.amap.com/theme/v1.3/markers/n/mark_b.png",
-            position: [me.all.user_obj.lng, me.all.user_obj.lat],
-            offset: new AMap.Pixel(-15, 0),
-            icon: new AMap.Icon({
-              size: new AMap.Size(30, 30), //图标大小
-              imageSize: new AMap.Size(30, 30),
-              image: `./img/map_${me.all.user_obj.sex}.png`,
-              // imageOffset: new AMap.Pixel(5, 5)
-            }),
-          });
-
-          marker.setMap(me.map);
-
-          console.log(marker);
-          // var markerContent = '' +
-          //   '<div class="custom-content-marker">' +
-          //   '   <img src="//a.amap.com/jsapi_demos/static/demo-center/icons/dir-via-marker.png">' +
-          //   '   <div class="close-btn" onclick="clearMarker()">X</div>' +
-          //   '</div>';
-
-          // var marker = new AMap.Marker({
-          //   position: position,
-          //   // 将 html 传给 content
-          //   content: markerContent,
-          //   // 以 icon 的 [center bottom] 为原点
-          //   offset: new AMap.Pixel(-13, -30)
-          // });
-        },
-
 
 
 
@@ -206,6 +192,7 @@
               $(`#${me.all.enter_key}`).click();
             });
         },
+
         // ==========================================
         // 初始化和后期修改信息的弹窗
         // 
@@ -270,22 +257,25 @@
             return;
           }
           me.api.upd_info.data = {
-            _id: window.sessionStorage.getItem("_id"),
-            net_name: $('#net_name').val(),
-            sex: $('#sex').val()
-          }
+              _id: window.sessionStorage.getItem("_id"),
+              net_name: $('#net_name').val(),
+              sex: $('#sex').val()
+            }
+            // 更新数据
           FN.ajax(me.api.upd_info)
             .then(function(data) {
-              // me.all.user_obj = data;
-              // // 其他信息登记
-              // me._io_emit_id_info(me.all.user_obj);
-
+              // 
               layer.close(index);
 
-              // 再次初始化
-              me._init();
+              // 前端的信息保存体
+              me.all.user_obj = data;
+
+              // 页面所有名字进行重新赋值；
+              $(`#content .head[_id=${data._id}]>.name`).html(data.net_name);
             });
         },
+
+
         // ==========================================
         // 修改个人信息
         ev_upd_info: function() {
@@ -399,6 +389,55 @@
               });
             });
         },
+
+
+        // ==========================================
+        // 公屏有新用户marker
+        _marker_user_init: function() {
+          var marker = new AMap.Marker({
+            position: [chat_data.lng, chat_data.lat],
+            offset: new AMap.Pixel(-15, -30),
+            // content: markerContent,
+            icon: new AMap.Icon({
+              size: new AMap.Size(30, 30), //图标大小
+              imageSize: new AMap.Size(30, 30),
+              image: `./img/map_${chat_data.sex}.png`,
+            }),
+          });
+          marker.setMap(me.map);
+          // 打label
+          marker.setLabel({
+            //修改label相对于maker的位置
+            offset: new AMap.Pixel(0, 0),
+            content: `
+            <div class='marker_box marker_box_${chat_data.sex}'>
+              <div class="item" id='mk_${chat_data._id}'>
+                ${chat_data.info}
+              </div>
+              <div class="arrow"></div>
+            </div>`
+          });
+
+          // 收集
+          me.all.map_user[chat_data._id] = marker;
+
+          // 清除
+          marker = null;
+        },
+        // 公屏有新用户marker的新信息
+        _marker_user_info: function() {
+          // 已经存在的用户点
+          if (me.all.map_user[chat_data._id] == undefined) {
+            // 初始化这个用户点
+            me._marker_user_init();
+          }
+          // 再改变信息；
+          $(`#mk_${chat_data._id}`).html(chat_data.info);
+        },
+
+
+
+
         // ==========================================
         // 公共聊天
         ev_common: function() {
@@ -412,10 +451,10 @@
             cursorborder: '0px solid blue'
           });
 
-          // 输入信息
+          // 公屏输入信息发送
           me.ev_common_info_send();
 
-          // 私聊
+          // 点击头像进入私聊
           me.ev_common_to_one();
         },
         // 折叠
@@ -448,7 +487,7 @@
               }
             });
         },
-        // 新消息
+        // 公屏有新消息
         ev_common_new: function() {
 
           $('#content').append(`
@@ -505,13 +544,11 @@
                 info: $('#new_ipt').val()
               });
 
-
               // 时刻定位相关
-
               $('#new_ipt').val("");
             });
 
-          // 注入中确认回车的标识
+          // 确认是在公屏的输入框
           $('#new_ipt')
             .off()
             .on('input', function() {
@@ -525,6 +562,9 @@
 
           }
         },
+
+
+
         // ==========================================
         // 公共选择一个进入私聊
         ev_common_to_one: function() {
@@ -551,6 +591,10 @@
               me.ev_one();
             });
         },
+
+
+
+
         // ==========================================
         // 单个聊天
         ev_one: function() {
@@ -655,7 +699,7 @@
                 return;
               }
 
-              // 本地 写显示 刚才的 信息
+              // 本地 先显示 刚才自己输入的 信息
               me.ev_one_info_new(ID, _id, {
                 _id: window.sessionStorage.getItem("_id"),
                 net_name: me.all.user_obj.net_name,
@@ -763,10 +807,12 @@
 
         // ============================================接受的全是大管道
         _receiveIO: function() {
-          // 
+          // 通知所有用户
           me._receiveIO_new_user();
+
           // 接受大管道：全体新信息
           me._receiveIO_new_info();
+
           // 接受单个信息
           me._receiveIO_new_info_one();
         },
@@ -774,23 +820,33 @@
         _receiveIO_new_user: function() {
           me.io.on("new_user", function(data) {
 
-            // 
+            // 通知的信息
             chat_data = data;
             chat_data.info = `hi~ 我是${data.net_name}，很高兴认识大家~`;
 
-            // 推入公共区域新信息
+            console.log(data);
+
+            // 推入公共区域新信息--自己的欢迎词；
             me.ev_common_new();
 
-
+            // 公屏打点
+            me._marker_user_init();
           });
         },
-        // 接受大管道：用户新信息
+        // 接受大管道：通知所有用户：新用户输入的信息
         _receiveIO_new_info: function() {
           // 
           me.io.on("all_new_info", function(data) {
+
             chat_data = data;
-            // 下线也会通知到公屏上；
+
+            console.log(data);
+
+            // 公屏新信息；
             me.ev_common_new();
+
+            // 公屏地图新信息；
+            me._marker_user_info();
           });
         },
         // 接受大管道的信息：个人信息：
@@ -837,16 +893,14 @@
                 me.ev_upd_info_layer(0);
                 return;
               }
+              // console.log(data);
               // 有数据
               me.all.user_obj = data;
               me.all.user_obj.lng = me.all.map.lng;
               me.all.user_obj.lat = me.all.map.lat;
 
-              // ID信息登记
+              // ID信息登记,后台登记信息，还要登记当前用户的socket
               me._io_emit_id_info(me.all.user_obj);
-
-              // 用户定位
-              me._map_user();
             });
         },
 

@@ -34,10 +34,7 @@ Module.prototype = {
       me._find(req, res);
     });
 
-    // upd_info
-    me.router.post('/upd_info.do', function(req, res) {
-      me._upd_info(req, res);
-    });
+
 
     // upd_ps
     me.router.post('/upd_ps.do', function(req, res) {
@@ -104,21 +101,7 @@ Module.prototype = {
         res.send(data);
       });
   },
-  _upd_info: function(req, res) {
-    var me = this;
-    me.User_model
-      .findById(req.body._id)
-      .then(function(data) {
 
-        data.net_name = req.body.net_name;
-        data.sex = req.body.sex;
-
-        return data.save();
-      })
-      .then(function(data) {
-        res.send(data);
-      });
-  },
   _upd_ps: function(req, res) {
     var me = this;
     me.User_model
