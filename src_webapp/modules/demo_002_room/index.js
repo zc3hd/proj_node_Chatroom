@@ -81,6 +81,9 @@
     _bind: function() {
       var me = this;
       var fns = {
+        _page_1: function() {
+          window.location.href = '../demo_001_login/index.html';
+        },
         _map: function(cb) {
 
           // 存在该用户
@@ -106,7 +109,7 @@
           }
           // 没有ID，就退出
           else {
-            window.location.href = '../demo_001_login/index.html';
+            me._page_1();
           }
         },
         // 加载工具
@@ -377,13 +380,16 @@
 
                   $('#out_yes')
                     .on('click', function() {
+                      // 
                       layer.close(index);
-                      // 退出
+
+                      // 通知后台退出
                       me._io_emit_id_out({ _id: window.sessionStorage.getItem("_id") });
 
                       // 
                       window.sessionStorage.removeItem("_id");
-                      me._init();
+                      // me._init();
+                      me._page_1();
                     });
                 },
               });
@@ -394,43 +400,45 @@
         // ==========================================
         // 公屏有新用户marker
         _marker_user_init: function() {
-          var marker = new AMap.Marker({
-            position: [chat_data.lng, chat_data.lat],
-            offset: new AMap.Pixel(-15, -30),
-            // content: markerContent,
-            icon: new AMap.Icon({
-              size: new AMap.Size(30, 30), //图标大小
-              imageSize: new AMap.Size(30, 30),
-              image: `./img/map_${chat_data.sex}.png`,
-            }),
-          });
-          marker.setMap(me.map);
-          // 打label
-          marker.setLabel({
-            //修改label相对于maker的位置
-            offset: new AMap.Pixel(0, 0),
-            content: `
+          // 
+          if (!me.all.map_user[chat_data._id]) {
+            var marker = new AMap.Marker({
+              position: [chat_data.lng, chat_data.lat],
+              offset: new AMap.Pixel(-15, -30),
+              // content: markerContent,
+              icon: new AMap.Icon({
+                size: new AMap.Size(30, 30), //图标大小
+                imageSize: new AMap.Size(30, 30),
+                image: `./img/map_${chat_data.sex}.png`,
+              }),
+            });
+            marker.setMap(me.map);
+            // 打label
+            marker.setLabel({
+              //修改label相对于maker的位置
+              offset: new AMap.Pixel(0, 0),
+              content: `
             <div class='marker_box marker_box_${chat_data.sex}'>
               <div class="item" id='mk_${chat_data._id}'>
                 ${chat_data.info}
               </div>
               <div class="arrow"></div>
             </div>`
-          });
+            });
 
-          // 收集
-          me.all.map_user[chat_data._id] = marker;
+            // 收集
+            me.all.map_user[chat_data._id] = marker;
 
-          // 清除
-          marker = null;
+            // 清除
+            marker = null;
+          }
+
         },
         // 公屏有新用户marker的新信息
         _marker_user_info: function() {
-          // 已经存在的用户点
-          if (me.all.map_user[chat_data._id] == undefined) {
-            // 初始化这个用户点
-            me._marker_user_init();
-          }
+          // 可能要初始化这个用户点
+          me._marker_user_init();
+          
           // 再改变信息；
           $(`#mk_${chat_data._id}`).html(chat_data.info);
         },
@@ -876,7 +884,8 @@
           }
           // 没有ID，就退出
           else {
-            window.location.href = '../demo_001_login/index.html';
+            // window.location.href = '../demo_001_login/index.html';
+            me._page_1();
           }
         },
         // 个人信息初始化验证
