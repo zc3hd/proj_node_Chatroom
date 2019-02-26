@@ -12,20 +12,15 @@ body {
 }
 
 @list_w: 260px;
-
 // 性别颜色
 @1_color: #7acdf9;
 @1_color_rgb: rgba(122, 205, 249, 0.9);
 // nv
 @0_color: #f17a6a;
-@0_color_rgb: rgba(241, 122, 106, 0.9);
-
-
+@0_color_rgb: rgba(241, 122, 106, 0.6);
 // 你我颜色
 @_color: #7acdf9;
 @me_color: #fff;
-
-
 // 
 .app {
   width: 100%;
@@ -337,8 +332,7 @@ body {
   }
 }
 
-
-// ================弹窗
+// ================信息修改弹窗
 .cc_layer {
   background-color: rgba(0, 0, 0, 0.1)!important;
   box-shadow: 0px 0px 50px #fff!important;
@@ -578,7 +572,21 @@ body {
   }
 }
 
-
+// ================load弹窗
+.cc_load {
+  // position: relative;
+  width: 100%;
+  transform: translate(-50%, -30px);
+  >.layui-layer-content {
+    width: 100%!important;
+    font-size: 20px;
+    text-align: center;
+    font-weight: 600;
+    color: #fff;
+    // background: none!important;
+    // background: url(default/loading-1.gif) center center no-repeat;
+  }
+}
 
 // ================地图marker
 .amap-marker-label {
@@ -600,12 +608,31 @@ body {
     >.item {
       width: 100%;
       height: 100%;
-      line-height: 26px;
-      text-align: center;
-      color: #000;
-      font-size: 12px;
-      font-weight: 600;
-      text-overflow: ellipsis;
+      position: relative;
+      box-sizing: border-box;
+      padding-left: 26px;
+      >.net_name {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 26px;
+        height: 26px;
+        line-height: 26px;
+        text-align: center;
+        background-color: @0_color_rgb;
+        font-size: 14px;
+        font-weight: 800;
+      }
+      >.info {
+        width: 100%;
+        height: 100%;
+        line-height: 26px;
+        text-align: center;
+        color: #000;
+        font-size: 12px;
+        font-weight: 600;
+        text-overflow: ellipsis;
+      }
     }
     >.arrow {
       border-width: 8px 8px 0;
@@ -623,6 +650,11 @@ body {
   // 女生
   >.marker_box_0 {
     background-color: @0_color_rgb;
+    >.item {
+      >.net_name {
+        background-color: @0_color_rgb;
+      }
+    }
     >.arrow {
       border-top-color: @0_color_rgb;
     }
@@ -630,6 +662,11 @@ body {
   // 男生
   >.marker_box_1 {
     background-color: @1_color_rgb;
+    >.item {
+      >.net_name {
+        background-color: @1_color_rgb;
+      }
+    }
     >.arrow {
       border-top-color: @1_color_rgb;
     }

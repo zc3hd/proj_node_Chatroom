@@ -98,7 +98,19 @@ Module.prototype = {
             return data.save();
           })
           .then(function(data) {
+
             res.send(data);
+
+            me._IO_emit_new_info({
+              net_name: me.all.socket[data._id].all.net_name,
+              _id: data._id,
+              sex: me.all.socket[data._id].all.sex,
+              info: "我已经改名为" + me.all.socket[data._id].all.net_name,
+              lng: me.all.socket[data._id].all.lng,
+              lat: me.all.socket[data._id].all.lat,
+              // 标识
+              key:"upd",
+            });
           });
       },
 
@@ -171,8 +183,8 @@ Module.prototype = {
             _id: data._id,
             sex: me.all.socket[data._id].all.sex,
             info: data.info,
-            lng:me.all.socket[data._id].all.lng,
-            lat:me.all.socket[data._id].all.lat,
+            lng: me.all.socket[data._id].all.lng,
+            lat: me.all.socket[data._id].all.lat,
           };
           // console.log(obj);
           // 通知新
@@ -196,7 +208,7 @@ Module.prototype = {
             sex: me.all.socket[data._id].all.sex,
             info: `该用户已经下线`,
             // 标识为下线
-            key:"out",
+            key: "out",
           };
           // 
           // 通知

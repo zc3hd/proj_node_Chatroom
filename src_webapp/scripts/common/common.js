@@ -3,14 +3,14 @@
  */
 var FN = {
   // 监测来源
-  check_source: function(cb1,cb2) {
+  check_source: function(cb1, cb2) {
     // 手机端
     if ((navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i))) {
-      cb1&&cb1();
-    } 
+      cb1 && cb1();
+    }
     // PC端
     else {
-      cb2&&cb2();
+      cb2 && cb2();
     }
   },
   //获取cookie
@@ -489,10 +489,12 @@ var FN = {
   },
 
   // ------------------------------------------------返回load加载层
-  load: function() {
+  load: function(content) {
     /* body... */
-    return layer.load(conf.load_sty, {
-      shade: 0.6
+    return layer.load(1, {
+      skin: 'cc_load',
+      content: content,
+      shade: 0.6,
     });
   },
   // ------------------------------------------------获取dom的视图高度
