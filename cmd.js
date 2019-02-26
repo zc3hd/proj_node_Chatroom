@@ -58,37 +58,46 @@ else if (process.env.NODE_ENV == 'db_up') {
 // 
 // =================================一键上传文件到github
 else if (process.env.NODE_ENV == 'git') {
-  // 获取当前时间戳
-  var timestamp = Date.parse(new Date());
 
-  // 要提交的目录
-  var _url = path.join(__dirname, './');
-
-  var os = require('os');
+  git();
+  setInterval(function(argument) {
+    git();
+  }, 30 * 60 * 1000);
 
 
-  // 要提交的源的名字
-  var origin = (os.hostname() == "LAPTOP-UJ33NHEM" ? "origin" : "name");
+  function git() {
+    // 获取当前时间戳
+    var timestamp = Date.parse(new Date());
+
+    // 要提交的目录
+    var _url = path.join(__dirname, './');
+
+    var os = require('os');
+
+
+    // 要提交的源的名字
+    var origin = (os.hostname() == "LAPTOP-UJ33NHEM" ? "origin" : "name");
 
 
 
-  tool
-  // 导出数据库
-    ._cmd(`git add ${_url}`)
-    // 
-    // .then(function() {
-    //   return tool._cmd(`git add ${_url}`);
-    // })
-    .then(function() {
-      return tool._cmd(`git commit -m "date:${tool._date(timestamp)}"`);
-    })
-    .then(function() {
-      return tool._cmd(`git push -u name master`)
-    })
-    .then(function() {
-      return tool._cmd(`git push -u origin master`)
-    })
-    .then(function() {
-      console.log('上传git完成');
-    });
+    tool
+    // 导出数据库
+      ._cmd(`git add ${_url}`)
+      // 
+      // .then(function() {
+      //   return tool._cmd(`git add ${_url}`);
+      // })
+      .then(function() {
+        return tool._cmd(`git commit -m "date:${tool._date(timestamp)}"`);
+      })
+      .then(function() {
+        return tool._cmd(`git push -u name master`)
+      })
+      .then(function() {
+        return tool._cmd(`git push -u origin master`)
+      })
+      .then(function() {
+        console.log('上传git完成');
+      });
+  }
 }
