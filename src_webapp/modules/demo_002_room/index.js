@@ -74,8 +74,6 @@
 
       // 加载地图
       me._map();
-
-      // 
     },
     _bind: function() {
       var me = this;
@@ -215,10 +213,13 @@
           // 
           // 信息修改
           me.ev_upd_info();
+
           // 修改密码
           me.ev_upd_ps();
+
           // 退出
           me.ev_out();
+
           // 聊天
           me.ev_common();
         },
@@ -241,7 +242,6 @@
 
         // ==========================================
         // 初始化和后期修改信息的弹窗
-        // 
         ev_upd_info_layer: function(closeBtn) {
           var str = `
                 <div class='box' id='box'>
@@ -318,7 +318,6 @@
 
               // 保存当前用户的信息
               me.all.user_obj = data;
-
             });
         },
 
@@ -455,13 +454,15 @@
           // 可能要初始化这个用户点
           me._marker_user_make(chat_data);
 
+          // 就是聊天那个大盒子
           $(`#mk_box_${chat_data._id}`).show();
+
           // 聊天的信息；
           $(`#mk_${chat_data._id}>.info`).html(chat_data.info);
 
           // 消息框自动消失
           setTimeout(function() {
-            $(`#mk_box_${chat_data._id}`).hide();
+            // $(`#mk_box_${chat_data._id}`).hide();
             // 清除
             chat_data = null;
           }, 3500);
@@ -492,7 +493,9 @@
                             <div class='info'>${chat_data.info}</div>
                           </div>
                           <div class="arrow"></div>
-                        </div>`
+                        </div>
+                        <div class="marker_name">${chat_data.net_name}</div>
+                        `
             });
 
             // chat_data就是 广播 回来的数据包
@@ -520,6 +523,7 @@
           // 地图的点的名称改变
           $(`#mk_net_name_${chat_data._id}`).html(chat_data.net_name);
 
+          console.log(chat_data);
           // 
           chat_data = null;
         },
