@@ -3,6 +3,8 @@ var path = require('path');
 var Tool = require('./tool.js');
 var tool = new Tool();
 
+// console.log
+
 var _path = "./";
 // =================================一键上传本地数据库--->online
 if (process.env.NODE_ENV == 'esc_db') {
