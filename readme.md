@@ -24,7 +24,6 @@
 
 ```js
    var http = require("http");
-   
    var server = http.createServer(function(req,res){
        if(req.url == "/"){
      //显示首页
@@ -51,6 +50,9 @@
 
 * 现在需要制作一个index页面，这个页面中，必须引用秘密js文件。调用io函数，取得socket对象。
 
+
+
+
 ```html
   <!DOCTYPE html>
   <html lang="en">
@@ -76,7 +78,7 @@
 * socket.emit()用于发出一个自定义事件。
 * socket.on()用于接收服务器发送的自定义事件。
 
-```
+```js
       <script type="text/javascript">
           //io对象得到一个SOCket
           var socket = io();
@@ -90,7 +92,7 @@
 ```
 
 
-```
+```js
 //建立一个socket通州，可以--定义关键字--事件进行--传输数据， 接收数据。
 io.on("connection",function(socket){
   console.log("1个客户端连接了");

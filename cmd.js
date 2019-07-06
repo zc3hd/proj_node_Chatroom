@@ -3,29 +3,7 @@ var path = require('path');
 var Tool = require('./tool.js');
 var tool = new Tool();
 
-// console.log
-// console.log
-// console.log
-// console.log
-// console.log
-// console.log
-// console.log
-// console.log
-// console.log
-// console.log
-// console.log
-// console.log
-// console.log
-// console.log
-// console.log
-// console.log
-// console.log
-// console.log
-// console.log
-// console.log
-// console.log
-// console.log
-// console.log
+// 
 
 var _path = "./";
 // =================================一键上传本地数据库--->online
@@ -84,9 +62,9 @@ else if (process.env.NODE_ENV == 'db_up') {
 else if (process.env.NODE_ENV == 'git') {
 
   git();
-  setInterval(function(argument) {
-    git();
-  }, 30 * 60 * 1000);
+  // setInterval(function(argument) {
+  //   git();
+  // }, 30 * 60 * 1000);
 
 
   function git() {

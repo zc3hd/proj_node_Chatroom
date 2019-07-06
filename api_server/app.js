@@ -22,7 +22,7 @@ mongoose.connection.once('open', function() {
 
 // =====================================================API
 // 提供所有的API
-function API(app,io) {
+function API(app, io) {
 
   // post应该放在内部，不然就没有设置post
   app.use(bodyParser.urlencoded({ extended: false }));
@@ -53,7 +53,7 @@ function API(app,io) {
 
   // 启动IO服务
   var IO = require('./tool/IO.js');
-  new IO(io,app).init();
+  new IO(io, app).init();
 }
 
 
@@ -64,11 +64,10 @@ app.use(express.static(path.join(__dirname, '../webapp/')));
 
 // 提供api服务
 // Io 服务；
-API(app,io);
+API(app, io);
 
 
 // app.listen(conf.api_port);
 http.listen(conf.api_port, function() {
   console.log('app服务 启动在：' + conf.api_port);
 });
-

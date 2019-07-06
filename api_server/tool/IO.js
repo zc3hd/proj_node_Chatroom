@@ -12,7 +12,7 @@ function Module(io, app) {
   // 路由
   me.router = require('express').Router();
 
-  // 收集所有通道
+  // 收集用户的所有通道信息
   me.all = {
     // 所有的通道
     socket: {
@@ -29,38 +29,34 @@ Module.prototype = {
 
     me._bind();
 
-    // 连接
+    // 所有用户连接到后台；双向 可接收、发送
     me._IO_connect(function(socket) {
       // 所有的事件只能在当前socket注册事件
 
-      // 身份信息登记
-      me._id_info(socket);
+      // 个人新的身份信息登记 且 广播给所有人
+      me._one_newUser_all(socket);
 
       // 新信息
-      me._new_info(socket);
+      me._one_newInfo_all(socket);
 
       // 用户下线
-      me._id_out(socket);
-
+      me._one_userOut_all(socket);
 
       // 新信息给个人
-      me._new_info_one(socket);
+      me._one_newInfo_one(socket);
     });
 
 
     // 配置前缀
     me.api_pro = '/api/user';
-
     // save_loc
     me.router.post('/save_loc.do', function(req, res) {
       me._save_loc(req, res);
     });
-
     // upd_info
     me.router.post('/upd_info.do', function(req, res) {
       me._upd_info(req, res);
     });
-
     me.app.use(me.api_pro, me.router);
   },
   _bind: function() {
@@ -101,7 +97,7 @@ Module.prototype = {
 
             res.send(data);
 
-            me._IO_emit_new_info({
+            me._IO_emit_all_newInfo_one({
               net_name: me.all.socket[data._id].all.net_name,
               _id: data._id,
               sex: me.all.socket[data._id].all.sex,
@@ -109,7 +105,7 @@ Module.prototype = {
               lng: me.all.socket[data._id].all.lng,
               lat: me.all.socket[data._id].all.lat,
               // 标识
-              key:"upd",
+              key: "upd",
             });
           });
       },
@@ -127,37 +123,46 @@ Module.prototype = {
       },
 
 
-      // ====================================服务器 收到 新的信息
+      // ==========================================================服务器 收到 新的信息
       // 信息登记
-      _id_info: function(socket) {
-        socket.on('id_info', function(data) {
+      _one_newUser_all: function(socket) {
+        // 当前用户注册后台这个通道
+        socket.on('one_newUser_all', function(data) {
           // console.log(data);
+          // 给注册过来的用户，登记一个空对象；
           me.all.socket[data._id] = {};
+
+
+          // 赋值 当前的 socket 对象
           // 这个socket就有意思了，可以理解为客户端过来的socket
-          // 这个socket就是可以在服务端，向这个客户端发送信息；
+          // 这个socket可以在服务端，向这个客户端发送信息；
           me.all.socket[data._id].socket = socket;
 
 
-          // 登记过来的信息；
+          // 登记过来的信息，赋值为随机值
           data.lng = data.lng + me._map_loc_random();
           data.lat = data.lat + me._map_loc_random();
           me.all.socket[data._id].all = data;
 
+          /* 
+          data._id
+            all:用户信息
+            socket：当前用户的信息及时信息通道
+          */
+
+          // 数据更新；
           me.User_model
             .findById(data._id)
             .then(function(user) {
-
               user.lng = data.lng;
               user.lat = data.lat;
 
-              // user_data = user;
-              // console.log(user_data);
               return user.save();
             })
             .then(function() {
 
               // 新登记的人-->通知所有人
-              me._IO_emit_new_user(data);
+              me._IO_emit_all_newUser_one(data);
             });
 
         });
@@ -166,41 +171,45 @@ Module.prototype = {
       _map_loc_random: function() {
         return Math.random() > 0.5 ? Math.random() * 0.001 : -Math.random() * 0.001;
       },
-      // 大通道通知所有连接
-      _IO_emit_new_user: function(data) {
-        me.io.emit("new_user", data);
+      // 大通道通知所有用户
+      // 下面 的 事件 可以理解为
+      // 对比： 
+      // me.io 发出的事件，是所有用户端都能收到的事件，单向
+      // 用户连接上 后台的socket，可以接收用户发来的信息，也可以发送信息；双向；
+      _IO_emit_all_newUser_one: function(data) {
+        me.io.emit("all_newUser_one", data);
       },
 
 
-      // ====================================服务器 收到 新的信息
-      // 信息收到，给全部
-      _new_info: function(socket) {
+      // ==========================================================服务器 收到 新的信息
+      // 收到个人信息，给全部广播
+      _one_newInfo_all: function(socket) {
         var obj = null;
-        socket.on('new_info', function(data) {
+        socket.on('one_newInfo_all', function(data) {
           // console.log(me.all.socket[data._id]);
           obj = {
-            net_name: me.all.socket[data._id].all.net_name,
             _id: data._id,
+            net_name: me.all.socket[data._id].all.net_name,
             sex: me.all.socket[data._id].all.sex,
             info: data.info,
             lng: me.all.socket[data._id].all.lng,
             lat: me.all.socket[data._id].all.lat,
           };
-          // console.log(obj);
-          // 通知新
-          me._IO_emit_new_info(obj);
+
+          // 广播信息 给 每一个用户
+          me._IO_emit_all_newInfo_one(obj);
         });
       },
-      // 大通道通知所有连接
-      _IO_emit_new_info: function(data) {
-        me.io.emit("all_new_info", data);
+      // 广播信息 给 每一个用户
+      _IO_emit_all_newInfo_one: function(data) {
+        me.io.emit("all_newInfo_one", data);
       },
 
       // ====================================服务器 收到 新的信息
       // 用户下线
-      _id_out: function(socket) {
+      _one_userOut_all: function(socket) {
         var obj = null;
-        socket.on('id_out', function(data) {
+        socket.on('one_userOut_all', function(data) {
           // console.log(me.all.socket[data._id]);
           obj = {
             _id: data._id,
@@ -211,22 +220,24 @@ Module.prototype = {
             key: "out",
           };
           // 
-          // 通知
-          me._IO_emit_new_info(obj);
+          // 广播
+          me._IO_emit_all_newInfo_one(obj);
 
-          // 删除属性
-          // me.all.socket[data._id] = null;
+          // 清空用户信息
+          me.all.socket[data._id] = null;
         });
       },
       // 信息收到，给个人
-      _new_info_one: function(socket) {
+      _one_newInfo_one: function(socket) {
 
-        socket.on('new_info_one', function(data) {
-          // console.log(data);
+        // 当前socket 
+        socket.on('one_newInfo_one', function(data) {
+          console.log(data);
+          // 
           data.from_net_name = me.all.socket[data.from].all.net_name;
 
-          // 要接受对象的
-          me.all.socket[data.to].socket.emit('new_info_one', data);
+          // 要接受对象的socket 发送信息 
+          me.all.socket[data.to].socket.emit('allOne_newInfo_one', data);
         });
       },
 

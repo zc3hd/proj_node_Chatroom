@@ -10,10 +10,14 @@
       login: {
         url: '/api/user/login.do',
       },
+
+
     };
+
 
     // 
     me.conf = {
+      // 用于选择接口的切换
       api: me.api.login,
     };
   };
@@ -31,6 +35,7 @@
 
       me._bind();
 
+
       // 页面初始化
       me._init();
 
@@ -45,7 +50,7 @@
           // 存在该用户
           if (window.sessionStorage.getItem("_id")) {
             window.location.href = '../demo_002_room/index.html';
-          } 
+          }
           // 
           else {
             // 入口
@@ -113,6 +118,7 @@
               console.log(me.conf.api);
             });
         },
+        // 选择提示信息
         _nav_info: function(_id) {
           layer.tips((_id == 'login' ? '登录' : '注册'), `#${_id}`, {
             tips: [4, '#1E9FFF']
@@ -162,7 +168,8 @@
           if (data._id) {
             layer.close(index);
             window.sessionStorage.setItem("_id", data._id);
-            // 初始化
+            
+            // 注册成功后，重新进行一次初始化
             me._init();
           }
           // 有问题
