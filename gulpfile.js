@@ -127,7 +127,9 @@ gulp.task('bs', function() {
 
   var body = '';
   // api成功开启
+  // 这个地方 竟然需要需要联网；
   var req = http.request(opt, function(res) {
+
       if (res.statusCode == 200) {
         // browserSync启动代理服务器
         browserSync.init({
@@ -143,6 +145,7 @@ gulp.task('bs', function() {
     })
     // api 服务没有开启,
     .on('error', function(e) {
+      // console.log(e);
       // browserSync启动静态服务器
       browserSync.init({
         notify: false,

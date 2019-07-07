@@ -33,6 +33,9 @@ Module.prototype = {
     me._IO_connect(function(socket) {
       // 所有的事件只能在当前socket注册事件
 
+      // 新用户 出去进来时 先做下登记；
+      me._one_newUser_init(socket);
+
       // 个人新的身份信息登记 且 广播给所有人
       me._one_newUser_all(socket);
 
@@ -62,27 +65,56 @@ Module.prototype = {
   _bind: function() {
     var me = this;
     var fns = {
-      // 保存位置
+      // 保存位置,注册昵称
       _save_loc: function(req, res) {
         var me = this;
+
         me.User_model
           .findById(req.body._id)
           .then(function(data) {
 
+
+            // 更新数据库数据
+            data.net_name = req.body.net_name;
+            data.sex = req.body.sex;
             data.lng = req.body.lng;
             data.lat = req.body.lat;
+
+
+            // 同步 IO sc数据
+            me.all.socket[data._id].all.net_name = req.body.net_name;
+            me.all.socket[data._id].all._id = req.body._id;
+            me.all.socket[data._id].all.sex = req.body.sex;
+            me.all.socket[data._id].all.lng = req.body.lng * 1 + me._map_loc_random();
+            me.all.socket[data._id].all.lat = req.body.lat * 1 + me._map_loc_random();
+
+            // console.log(me.all.socket[data._id].all);
 
             return data.save();
           })
           .then(function(data) {
             res.send(data);
+
+            // 通知所有人
+            me._IO_emit_all_newUser_one({
+              net_name: me.all.socket[data._id].all.net_name,
+              _id: data._id,
+              sex: me.all.socket[data._id].all.sex,
+              info: "hi~大家好，我是" + me.all.socket[data._id].all.net_name,
+              lng: me.all.socket[data._id].all.lng,
+              lat: me.all.socket[data._id].all.lat,
+            });
+
           });
       },
       // 跟新信息
       _upd_info: function(req, res) {
+        // console.log(req.body);
         me.User_model
           .findById(req.body._id)
           .then(function(data) {
+            // console.log(data, 1);
+
             // socket对象体信息变更
             me.all.socket[req.body._id].all.net_name = req.body.net_name;
             me.all.socket[req.body._id].all.sex = req.body.sex;
@@ -90,6 +122,7 @@ Module.prototype = {
             // 数据库保存
             data.net_name = req.body.net_name;
             data.sex = req.body.sex;
+
 
             return data.save();
           })
@@ -107,6 +140,7 @@ Module.prototype = {
               // 标识
               key: "upd",
             });
+
           });
       },
 
@@ -124,46 +158,38 @@ Module.prototype = {
 
 
       // ==========================================================服务器 收到 新的信息
-      // 信息登记
-      _one_newUser_all: function(socket) {
-        // 当前用户注册后台这个通道
-        socket.on('one_newUser_all', function(data) {
-          // console.log(data);
+      // 用户 初次进来时 ，先把socket 登记下；
+      _one_newUser_init: function(socket) {
+        //
+        socket.on('one_newUser_init', function(data) {
           // 给注册过来的用户，登记一个空对象；
           me.all.socket[data._id] = {};
-
 
           // 赋值 当前的 socket 对象
           // 这个socket就有意思了，可以理解为客户端过来的socket
           // 这个socket可以在服务端，向这个客户端发送信息；
           me.all.socket[data._id].socket = socket;
 
-
-          // 登记过来的信息，赋值为随机值
-          data.lng = data.lng + me._map_loc_random();
-          data.lat = data.lat + me._map_loc_random();
+          // 登记过来的信息，一开始什么都没有
           me.all.socket[data._id].all = data;
 
-          /* 
-          data._id
-            all:用户信息
-            socket：当前用户的信息及时信息通道
-          */
+          // console.log(me.all.socket[data._id].all);
+        });
+      },
+      // 信息登记
+      _one_newUser_all: function(socket) {
+        // 当前用户注册后台这个通道
+        socket.on('one_newUser_all', function(data) {
 
-          // 数据更新；
-          me.User_model
-            .findById(data._id)
-            .then(function(user) {
-              user.lng = data.lng;
-              user.lat = data.lat;
+          // 数据同步
+          me.all.socket[data._id].all.net_name = data.net_name;
+          me.all.socket[data._id].all._id = data._id;
+          me.all.socket[data._id].all.sex = data.sex;
+          me.all.socket[data._id].all.lng = data.lng;
+          me.all.socket[data._id].all.lat = data.lat;
 
-              return user.save();
-            })
-            .then(function() {
-
-              // 新登记的人-->通知所有人
-              me._IO_emit_all_newUser_one(data);
-            });
+          // 新登记的人-->通知所有人
+          me._IO_emit_all_newUser_one(data);
 
         });
       },
@@ -195,6 +221,8 @@ Module.prototype = {
             lng: me.all.socket[data._id].all.lng,
             lat: me.all.socket[data._id].all.lat,
           };
+
+          // console.log(obj);
 
           // 广播信息 给 每一个用户
           me._IO_emit_all_newInfo_one(obj);
@@ -232,7 +260,7 @@ Module.prototype = {
 
         // 当前socket 
         socket.on('one_newInfo_one', function(data) {
-          console.log(data);
+          // console.log(data);
           // 
           data.from_net_name = me.all.socket[data.from].all.net_name;
 

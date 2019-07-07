@@ -2,7 +2,7 @@
   function Model() {
     var me = this;
 
-    // 
+    // 所有api
     me.api = {
       // 找用户信息
       find: {
@@ -14,13 +14,19 @@
         url: '/api/user/upd_info.do',
       },
 
+      // 保存坐标
+      save_loc: {
+        url: '/api/user/save_loc.do',
+      },
+
+
       // upd信息
       upd_ps: {
         url: '/api/user/upd_ps.do',
       },
     };
 
-    // 
+    // 所有数据容器
     me.all = {
       // 回车事件触发对象标识
       enter_key: '',
@@ -53,9 +59,6 @@
       // ============================用户定位相关
       loc_key: null,
     };
-
-
-
 
 
     // 当前socket
@@ -91,26 +94,50 @@
             me.map = new AMap.Map("map", {
               mapStyle: 'amap://styles/macaron',
               zooms: [3, 20],
-              zoom:7,
+              zoom: 7,
             });
 
-            // 加载中
-            me.map._load_index = FN.load('用户信息获取中...');
+            // 遮照
+            me.map._load_index = FN.load('用户地图数据获取中...');
 
-            // 加载工具
+
+            // 用户初始化注册socket
+            me._io_emit_one_newUser_init({
+              _id: window.sessionStorage.getItem("_id")
+            });
+
+
+            // 加载地图工具
             me._map_tool()
-            .then(function(data) {
+              .then(function(data) {
                 // 浏览器开始定位
                 return me._map_loc()
               })
               .then(function(data) {
-                // 获取用户信息，查看是否需要更新数据
+
+                // 获取用户信息
                 return me._user_check();
               })
               // 发送给后台
               .then(function(data) {
-                // ID信息登记,后台登记信息，广播给全部
-                me._io_emit_one_newUser_all(me.all.user_obj);
+
+                // *****************测试
+                // me.all.user_obj.net_name = '';
+
+
+                // 没有昵称
+                if (me.all.user_obj.net_name == '' || me.all.user_obj.net_name == undefined) {
+                  me._user_init();
+                }
+                // 有昵称
+                else {
+                  me.all.user_obj.info = "hi~大家好，我是" + me.all.user_obj.net_name,
+                    // ID信息登记,后台登记信息，广播给全部
+                    me._io_emit_one_newUser_all(me.all.user_obj);
+                }
+
+
+
               });
           }
           // 没有ID，就退出
@@ -124,7 +151,7 @@
             AMap.plugin('AMap.Geolocation', function() {
               me.all.map.tool = new AMap.Geolocation({
                 enableHighAccuracy: false, //是否使用高精度定位，默认:true
-                timeout: 10000, //超过10秒后停止定位，默认：无穷大
+                timeout: 3000, //超过10秒后停止定位，默认：无穷大
                 maximumAge: 0,
                 showButton: false,
                 zoomToAccuracy: false, //定位成功后是否自动调整地图视野到定位点
@@ -157,7 +184,7 @@
                   me.all.loc_key = false;
                   // 
                   layer.msg('当前浏览器不支持定位，可使用最新IE浏览器，</br>开启定位功能进行体验。', {
-                    time: 4000 
+                    time: 4000
                   });
                   me.all.map.lng = me.all.map.lng;
                   me.all.map.lat = me.all.map.lat;
@@ -171,7 +198,7 @@
         },
         // 初始化信息验证
         _user_check: function() {
-          
+
           // 本地做缓存
           if (window.sessionStorage.getItem("_id")) {
             // 信息初始化
@@ -182,12 +209,6 @@
               };
               FN.ajax(me.api.find)
                 .then(function(data) {
-                  // console.log(data);
-                  // 没有用户数据
-                  if (data.net_name == '' || data.net_name == undefined) {
-                    me.ev_upd_info_layer(0);
-                    return;
-                  }
 
 
                   // 有用户数据，更新用户的坐标；
@@ -195,11 +216,11 @@
                   me.all.user_obj.lng = me.all.map.lng;
                   me.all.user_obj.lat = me.all.map.lat;
 
-                  // 关闭弹窗
+
+                  // 关闭地图数据查询的弹窗
                   layer.close(me.map._load_index);
 
-                  // 
-                  resolve(1);
+                  resolve();
                 });
             });
           }
@@ -208,6 +229,14 @@
             me._page_1();
           }
         },
+        // 用户没有昵称，初始化登记
+        _user_init: function() {
+          // 默认性别为男
+          me.all.user_obj.sex = 1;
+          me.all.user_obj.net_name = "";
+          me.ev_upd_info_layer(0);
+        },
+
 
 
 
@@ -230,7 +259,7 @@
           // 退出
           me.ev_out();
 
-          
+
         },
         // =========================================
         // 键盘键入信息
@@ -265,8 +294,8 @@
                   <div class='my_info'>
                     <div class='title'>性别</div>
                     <div class='ipt'>
-                      <select name="" id="sex">
-                        <option value=1>boy</option>
+                      <select id="sex">
+                        <option value=1 selected="selected">boy</option>
                         <option value=0>girl</option>
                       </select>
                     </div>
@@ -290,6 +319,7 @@
             btn: false,
             content: str,
             success: function(layero, index) {
+
               // 数据反选
               if (me.all.user_obj != null) {
                 $('#net_name').val(me.all.user_obj.net_name);
@@ -300,13 +330,14 @@
               $('#info_yes')
                 .off()
                 .on('click', function() {
-                  me.ev_upd_info_layer_yes(index);
+                  // console.log(1);
+                  me.ev_upd_info_layer_yes(index, closeBtn);
                 });
             },
           });
         },
         // 提交数据
-        ev_upd_info_layer_yes: function(index) {
+        ev_upd_info_layer_yes: function(index, closeBtn) {
           if ($('#net_name').val() == '') {
             layer.msg('昵称不能为空');
             return;
@@ -315,19 +346,41 @@
             layer.msg('昵称长度不能超过10个字符');
             return;
           }
-          me.api.upd_info.data = {
-            _id: window.sessionStorage.getItem("_id"),
+
+
+
+          var api = {};
+          api.data = {
+            _id: me.all.user_obj._id,
             net_name: $('#net_name').val(),
-            sex: $('#sex').val()
+            sex: $('#sex').val(),
+            lng: me.all.user_obj.lng,
+            lat: me.all.user_obj.lat,
           };
-          // 更新数据
-          FN.ajax(me.api.upd_info)
+
+          // console.log(api.data);
+
+          // 用户初始化，没有昵称
+          if (closeBtn == 0) {
+            api.url = me.api.save_loc.url;
+          }
+          // 用户有昵称 更新数据
+          else {
+            api.url = me.api.upd_info.url;
+          }
+
+
+          // 提交 数据
+          FN.ajax(api)
             .then(function(data) {
               // 
               layer.close(index);
 
-              // 保存当前用户的信息
+              // 本地更新当前用户的信息
               me.all.user_obj = data;
+
+
+              // 界面上看到的修改是通过广播的形式
             });
         },
 
@@ -483,7 +536,6 @@
             var marker = new AMap.Marker({
               position: [chat_data.lng, chat_data.lat],
               offset: new AMap.Pixel(-15, -30),
-              // content: markerContent,
               icon: new AMap.Icon({
                 size: new AMap.Size(30, 30), //图标大小
                 imageSize: new AMap.Size(30, 30),
@@ -492,7 +544,7 @@
             });
             marker.setMap(me.map);
 
-            // console.log(chat_data);
+
             // 打label
             marker.setLabel({
               offset: new AMap.Pixel(0, 0),
@@ -503,7 +555,7 @@
                           </div>
                           <div class="arrow"></div>
                         </div>
-                        <div class="marker_name">${chat_data.net_name}</div>
+                        <div class="marker_name" id='mk_net_name_${chat_data._id}_show'>${chat_data.net_name}</div>
                         `
             });
 
@@ -529,13 +581,41 @@
 
         // 用户的信息改变，地图点的跟变
         _marker_user_upd: function(chat_data) {
-          // 页面所有名字进行重新赋值；
+          // console.log(chat_data);
+          // 列表所有昵称进行重新赋值；
           $(`#content .head[_id=${chat_data._id}]>.name`).html(chat_data.net_name);
+          // 昵称颜色
+          $(`#content .head[_id=${chat_data._id}]`).parent().removeClass().addClass(`item item_${chat_data.sex}`);
 
-          // 地图的点的名称改变
+
+          // 地图的点的聊天的昵称改变
           $(`#mk_net_name_${chat_data._id}`).html(chat_data.net_name);
+          // 地图常显示的网名改变
+          $(`#mk_net_name_${chat_data._id}_show`).html(chat_data.net_name);
 
-          console.log(chat_data);
+
+          // 列表的性别
+          $(`#content .head[_id=${chat_data._id}]>.img`).css({
+            "background": `url(./img/${chat_data.sex}.png)`,
+            "background-repeat": "no-repeat",
+            "background-position": "50%",
+            "background-size": "26px",
+          });
+
+
+          // marker点性别改变
+          $(`#mk_box_${chat_data._id}`)
+            .parent()
+            .parent()
+            .children('.amap-icon')
+            .children('img')
+            .attr('src', `./img/map_${chat_data.sex}.png`);
+
+
+
+
+
+          // console.log(chat_data);
           // 
           chat_data = null;
         },
@@ -674,7 +754,7 @@
             scrollTop: me.all.top
           });
         },
-        
+
 
 
         // ==========================================
@@ -696,7 +776,7 @@
               }
 
               // 聊天对象 已经没有marker 用户已经下线
-              if (me.all.map_user[$(e.currentTarget).attr('_id')]==null) {
+              if (me.all.map_user[$(e.currentTarget).attr('_id')] == null) {
                 layer.msg('该用户已经下线');
                 return;
               }
@@ -924,6 +1004,14 @@
 
 
         // ============================================发出的 全是自己的管道
+        // 初始化登记
+        _io_emit_one_newUser_init: function(data) {
+          // 向后台发出自己的信息；
+          // 这个地方的 me.io 代表是用户已经连接到后台的连接的socket
+          me.io.emit('one_newUser_init', data);
+        },
+
+
         // 信息登记
         _io_emit_one_newUser_all: function(data) {
           // 向后台发出自己的信息；
@@ -965,9 +1053,9 @@
         _receive_IO_all_newUser_one: function() {
           me.io.on("all_newUser_one", function(data) {
 
+
             // 通知的信息
             chat_data = data;
-            chat_data.info = `hi~ 我是${data.net_name}，很高兴认识大家~`;
 
             // 推入公共区域新信息--自己的欢迎词；
             me.ev_common_all_newInfo_one();
@@ -983,9 +1071,8 @@
 
             chat_data = data;
 
-            // 公屏显示---该用户已经下线;
+            // 公屏显示---用户的信息
             me.ev_common_all_newInfo_one();
-
 
 
             // 地图点退出

@@ -332,6 +332,20 @@ body {
   }
 }
 
+// 手机端 <=768px
+@media screen and (max-width:768px) {
+  .app {
+    >.box {
+      >.list {
+        height: 33.33%;
+      }
+      >.ipt_box_f {
+        padding-left: 0!important;
+      }
+    }
+  }
+}
+
 // ================信息修改弹窗
 .cc_layer {
   background-color: rgba(0, 0, 0, 0.8)!important;
@@ -672,11 +686,10 @@ body {
     }
   }
   // 用户net_name
-  >.marker_name{
+  >.marker_name {
     position: absolute;
     bottom: -20px;
     left: 50%;
-
     width: 60px;
     height: 20px;
     text-align: center;

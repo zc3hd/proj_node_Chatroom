@@ -103,19 +103,19 @@
             });
         },
         _nav: function() {
-
+          // 选择提示信息
           me._nav_info("login");
           $('#box')
             .off()
             .on('mouseover', '.item', function(e) {
-              me._nav_info($(e.target).attr('id'))
+              me._nav_info($(e.target).attr('id'));
             })
             .on('click', '.item', function(e) {
               $('#box>.item').removeClass("ac");
               $(e.target).addClass('ac');
 
               me.conf.api = me.api[$(e.target).attr('id')];
-              console.log(me.conf.api);
+              // console.log(me.conf.api);
             });
         },
         // 选择提示信息
